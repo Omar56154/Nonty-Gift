@@ -1,131 +1,125 @@
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إلى نونتي (حنين H) 💗</title>
-<!-- تحميل Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- تحميل Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 /* تنسيق لوحة المفاتيح */
 .keypad-button {
-/ تطبيق تنسيقات Tailwind يدوياً هنا لضمان التوافق /
+/* تطبيق تنسيقات Tailwind يدوياً هنا لضمان التوافق */
 padding: 1rem;
 border-radius: 0.75rem;
 font-size: 1.875rem;
 font-weight: 800;
-background-color: rgb(55 65 81); / bg-gray-700 /
+background-color: rgb(55 65 81); /* bg-gray-700 */
 transition: all 0.15s ease;
 box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
 }
 .keypad-button:hover {
-background-color: rgb(75 85 99); / hover:bg-gray-600 /
+background-color: rgb(75 85 99); /* hover:bg-gray-600 */
 }
-/ لتأثير التوهج عند إدخال كلمة المرور /
+/* لتأثير التوهج عند إدخال كلمة المرور */
 .pin-filled {
-background-color: #ff69b4; / bg-pink-500 */
+background-color: #ff69b4; /* bg-pink-500 */
 }
 
-    /* خط "Cairo" لإضافة مظهر عصري */
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-    :root {
-        --primary-pink: #ff69b4; /* Pink (Hot Pink) */
-        --dark-bg: #1a1a2e; /* Dark Blue/Purple */
-    }
-    body {
-        font-family: 'Cairo', sans-serif;
-        background-color: var(--dark-bg);
-        color: white;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        overflow-x: hidden;
-        overflow-y: auto; /* للسماح بالتمرير إذا كان المحتوى طويلاً */
-        position: relative;
-    }
+/* خط "Cairo" لإضافة مظهر عصري */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+:root {
+    --primary-pink: #ff69b4; /* Pink (Hot Pink) */
+    --dark-bg: #1a1a2e; /* Dark Blue/Purple */
+}
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--dark-bg);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* عند التحميل يتم إخفاء التمرير بواسطة JS، وعند النجاح يتم عرضه لـ mobile scroll */
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+}
 
-    /* تنسيق الأزرار المشعة */
-    .glow-button {
-        transition: all 0.3s ease;
-        box-shadow: 0 0 10px var(--primary-pink), 0 0 20px rgba(255, 105, 180, 0.5);
-    }
-    .glow-button:hover {
-        box-shadow: 0 0 15px var(--primary-pink), 0 0 30px var(--primary-pink);
-        transform: scale(1.05);
-    }
+/* تنسيق الأزرار المشعة */
+.glow-button {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px var(--primary-pink), 0 0 20px rgba(255, 105, 180, 0.5);
+}
+.glow-button:hover {
+    box-shadow: 0 0 15px var(--primary-pink), 0 0 30px var(--primary-pink);
+    transform: scale(1.05);
+}
 
-    /* تنسيق مشغل الموسيقى */
-    #audio-player-controls {
-        background-color: rgba(42, 42, 70, 0.8);
-        backdrop-filter: blur(5px);
-    }
+/* تنسيق مشغل الموسيقى */
+#audio-player-controls {
+    background-color: rgba(42, 42, 70, 0.8);
+    backdrop-filter: blur(5px);
+}
 
-    /* تأثير القلوب (الجسيمات) */
-    .heart {
-        position: absolute;
-        width: 15px;
-        height: 15px;
-        background-color: var(--primary-pink);
-        transform: rotate(-45deg);
-        pointer-events: none; /* لا تتداخل مع النقر */
-        animation: heart-fall linear infinite;
-        z-index: 0;
-        opacity: 0;
-    }
+/* تأثير القلوب (الجسيمات) */
+.heart {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--primary-pink);
+    transform: rotate(-45deg);
+    pointer-events: none; /* لا تتداخل مع النقر */
+    animation: heart-fall linear infinite;
+    z-index: 0;
+    opacity: 0;
+}
 
-    .heart::before,
-    .heart::after {
-        content: "";
-        position: absolute;
-        width: 15px;
-        height: 15px;
-        background-color: var(--primary-pink);
-        border-radius: 50%;
-    }
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: var(--primary-pink);
+    border-radius: 50%;
+}
 
-    .heart::before {
-        top: -50%;
-        left: 0;
-    }
+.heart::before {
+    top: -50%;
+    left: 0;
+}
 
-    .heart::after {
-        top: 0;
-        left: 50%;
-    }
+.heart::after {
+    top: 0;
+    left: 50%;
+}
 
-    @keyframes heart-fall {
-        0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
-        100% { transform: translateY(-100vh) rotate(-45deg); opacity: 0; }
-    }
+@keyframes heart-fall {
+    0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(-45deg); opacity: 0; }
+}
 
-    /* تنسيق شاشة العرض السينمائي (النمط المودال) */
-    .cinematic-modal-content {
-        background: rgba(0, 0, 0, 0.95);
-        max-width: 90vw;
-        max-height: 90vh;
-        box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
-    }
+/* تنسيق شاشة العرض السينمائي (النمط المودال) */
+.cinematic-modal-content {
+    background: rgba(0, 0, 0, 0.95);
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
+}
 
-    .cinematic-image {
-        transition: opacity 1.5s ease-in-out;
-    }
+.cinematic-image {
+    transition: opacity 1.5s ease-in-out;
+}
 </style>
-
-
 </head>
 <body class="p-4 relative">
 
-<!-- شاشة القفل ولوحة المفاتيح (PIN: 772009) -->
 <div id="login-screen" class="fixed inset-0 z-[100] bg-gray-900 flex items-center justify-center p-4">
     <div class="w-full max-w-sm text-center">
         <h2 class="text-4xl font-bold text-pink-400 mb-6">أهلاً يا نونتي (H) 🔒</h2>
         
-        <!-- حقل إدخال كلمة المرور -->
         <div class="flex justify-center mb-6">
             <div id="pin-display" class="flex space-x-3 space-x-reverse bg-gray-800 p-3 rounded-xl shadow-lg border border-pink-500">
                 <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
@@ -139,7 +133,6 @@ background-color: #ff69b4; / bg-pink-500 */
 
         <p id="login-status" class="text-red-400 mb-4 hidden">كلمة المرور غير صحيحة.</p>
 
-        <!-- لوحة المفاتيح الرقمية (Keypad) -->
         <div id="keypad" class="grid grid-cols-3 gap-3">
             <button onclick="appendPin('1')" class="keypad-button">1</button>
             <button onclick="appendPin('2')" class="keypad-button">2</button>
@@ -159,15 +152,10 @@ background-color: #ff69b4; / bg-pink-500 */
         </div>
     </div>
 </div>
-<!-- نهاية شاشة القفل -->
-
-<!-- حاوية القلوب (الجسيمات) -->
 <div id="heart-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
-<!-- المحتوى الرئيسي (طبقة علوية) -->
 <div class="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto py-10">
 
-    <!-- الاسم المطلوب في منتصف الصفحة -->
     <h1 id="main-title" class="text-6xl md:text-8xl font-extrabold text-white mb-8 p-4 rounded-xl relative">
         <span style="text-shadow: 0 0 15px var(--primary-pink), 0 0 30px rgba(255, 105, 180, 0.8);">
             Nonty (Haneen (H)💗)
@@ -176,7 +164,6 @@ background-color: #ff69b4; / bg-pink-500 */
 
     <p class="text-xl text-gray-300 mb-12">Welcome to your web, my baby (Haneen Abdelghafar) !</p>
 
-    <!-- منطقة الأزرار -->
     <div class="flex flex-wrap justify-center gap-6 mb-16">
         <button onclick="openMessageModal()" class="glow-button flex items-center bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
             <i data-lucide="message-square-heart" class="w-6 h-6 ml-2"></i>
@@ -192,7 +179,6 @@ background-color: #ff69b4; / bg-pink-500 */
         </button>
     </div>
 
-    <!-- منطقة عرض الرسائل المحفوظة (تم إزالتها لضمان عمل Formspree) -->
     <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
         <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائل المحبين:</h2>
         <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
@@ -202,15 +188,12 @@ background-color: #ff69b4; / bg-pink-500 */
 
 </div>
 
-<!-- مشغل الموسيقى (ثابت في الأسفل) -->
 <div id="audio-player-controls" class="fixed bottom-0 w-full p-4 rounded-t-2xl shadow-2xl z-20">
     <div class="flex flex-col md:flex-row items-center justify-center max-w-xl mx-auto space-y-3 md:space-y-0 md:space-x-6 md:space-x-reverse">
-        <!-- معلومات الأغنية -->
         <div class="text-center md:text-right flex-grow">
             <p class="text-sm text-pink-400">قيد التشغيل:</p>
             <p id="current-song-title" class="text-lg font-semibold text-white">تحميل...</p>
         </div>
-        <!-- عناصر التحكم -->
         <div class="flex items-center space-x-4 space-x-reverse">
             <button onclick="prevTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
                 <i data-lucide="skip-back" class="w-6 h-6 text-pink-400"></i>
@@ -226,16 +209,14 @@ background-color: #ff69b4; / bg-pink-500 */
     <audio id="audio-player" onended="nextTrack()"></audio>
 </div>
 
-<!-- المودال لإرسال الرسالة (تم تحويله إلى نموذج Formspree) -->
 <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
     <form id="message-form" method="POST" action="https://formspree.io/f/mdkppprd" class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
         <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
         
-        <!-- هذا الحقل مخفي ويستخدم لعنوان الرد في بريدك الإلكتروني (اختياري) -->
         <input type="hidden" name="_replyto" value="dromar720074@gmail.com">
         
         <textarea name="message" id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..." required minlength="5"
-                  class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
+                    class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
 
         <div class="flex justify-between items-center">
             <button type="submit" class="glow-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition">
@@ -249,20 +230,16 @@ background-color: #ff69b4; / bg-pink-500 */
     </form>
 </div>
 
-<!-- المودال لعرض الصور السينمائي -->
 <div id="cinematic-modal" class="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4 hidden">
     <div class="relative w-full h-full flex items-center justify-center">
-        <!-- زر الإغلاق -->
         <button onclick="closeCinematicModal()" class="absolute top-4 right-4 text-white p-3 rounded-full bg-gray-800 hover:bg-gray-700 z-50">
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
 
-        <!-- حاوية الصورة -->
         <div class="w-full h-full flex items-center justify-center">
             <img id="cinematic-image" src="" alt="صورة الإهداء" class="cinematic-image max-w-full max-h-full object-contain rounded-lg shadow-2xl opacity-0 transition-opacity duration-1000">
         </div>
 
-        <!-- معلومات الصورة -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 p-3 rounded-xl text-white text-center">
             <p id="cinematic-caption" class="text-lg font-semibold"></p>
             <p id="cinematic-counter" class="text-sm text-gray-400"></p>
@@ -270,12 +247,10 @@ background-color: #ff69b4; / bg-pink-500 */
     </div>
 </div>
 
-<!-- المودال الخاص بـ "معلومات عنا" -->
 <div id="about-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-green-500 cinematic-modal-content max-h-full overflow-y-auto">
         <h2 class="text-3xl font-bold text-center mb-6 text-green-400"> (معلومات عنا) 💖</h2>
         
-        <!-- مكان لتعديل المحتوى الخاص بك -->
         <p class="text-lg text-gray-300 mb-4">
             دي تواريخ الحاجات اللي حصلت بينا:
         </p>
@@ -297,13 +272,13 @@ background-color: #ff69b4; / bg-pink-500 */
 </div>
 
 
-<!-- سكربت JavaScript (تم حذف Firebase بالكامل) -->
 <script type="module">
     
     // **********************************************
     // 1. منطق إرسال الرسائل (Formspree)
     // **********************************************
 
+    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
     window.openMessageModal = function() {
         document.getElementById('message-modal').classList.remove('hidden');
         statusElement.classList.add('hidden'); // إخفاء حالة الرسالة السابقة
@@ -366,7 +341,7 @@ background-color: #ff69b4; / bg-pink-500 */
     const currentSongTitle = document.getElementById('current-song-title');
 
     // **********************************************
-    // 0. منطق شاشة القفل (Keypad Logic)
+    // 0. منطق شاشة القفل (Keypad Logic) - تم التصحيح هنا
     // **********************************************
 
     const CORRECT_PIN = '772009';
@@ -375,7 +350,8 @@ background-color: #ff69b4; / bg-pink-500 */
     const loginScreen = document.getElementById('login-screen');
     const loginStatus = document.getElementById('login-status');
 
-    function updatePinDisplay() {
+    // جعل الدوال عامة لكي تستجيب للأزرار في HTML (التصحيح)
+    window.updatePinDisplay = function() {
         for (let i = 0; i < 6; i++) {
             if (i < currentPin.length) {
                 pinDisplay[i].classList.add('pin-filled');
@@ -388,13 +364,13 @@ background-color: #ff69b4; / bg-pink-500 */
     window.appendPin = function(digit) {
         if (currentPin.length < 6) {
             currentPin += digit;
-            updatePinDisplay();
+            window.updatePinDisplay(); // استدعاء الدالة المصححة
         }
     };
 
     window.clearPin = function() {
         currentPin = '';
-        updatePinDisplay();
+        window.updatePinDisplay(); // استدعاء الدالة المصححة
         loginStatus.classList.add('hidden');
     };
 
@@ -403,28 +379,26 @@ background-color: #ff69b4; / bg-pink-500 */
             // النجاح: إخفاء شاشة القفل
             loginScreen.classList.add('hidden');
             document.body.classList.remove('overflow-hidden'); // السماح بالتمرير
+            document.body.style.overflowY = 'auto'; // تفعيل التمرير العمودي
         } else {
             // الفشل: إظهار رسالة الخطأ ومسح الكود
             loginStatus.textContent = 'كلمة المرور غير صحيحة.';
             loginStatus.classList.remove('hidden');
             setTimeout(() => {
-                clearPin();
+                window.clearPin(); // استدعاء الدالة المصححة
             }, 500);
         }
     };
     
     // إخفاء التمرير عند التحميل
-    document.body.classList.add('overflow-hidden'); 
+    document.body.style.overflowY = 'hidden';
     
-    // ** تأكد أنك تحذف هنا أي أكواد قديمة لـ Firebase (مثل الدوال saveMessage, setupMessageListener) **
     
     /*
     * ---------------------------------------------------
     * ✅ مكان إضافة الأغاني (تم تصحيح الروابط لصيغة RAW/مباشرة):
     * ---------------------------------------------------
-
-
-*/
+    */
 
     const playlist = [
         // تم تحويل رابط GitHub 'blob' إلى 'raw'
@@ -467,6 +441,7 @@ background-color: #ff69b4; / bg-pink-500 */
         audioPlayer.load();
     }
 
+    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
     window.togglePlayPause = function() {
         if (audioPlayer.paused) {
             audioPlayer.play();
@@ -577,6 +552,7 @@ background-color: #ff69b4; / bg-pink-500 */
         }, SLIDESHOW_DURATION);
     }
 
+    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
     window.openCinematicModal = function() {
         document.getElementById('cinematic-modal').classList.remove('hidden');
         startSlideshow();
@@ -594,6 +570,7 @@ background-color: #ff69b4; / bg-pink-500 */
     // 4. منطق "معلومات عنا"
     // **********************************************
 
+    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
     window.openAboutModal = function() {
         document.getElementById('about-modal').classList.remove('hidden');
     }
@@ -653,7 +630,5 @@ background-color: #ff69b4; / bg-pink-500 */
     };
 
 </script>
-
-
 </body>
 </html>
