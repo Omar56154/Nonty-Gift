@@ -162,7 +162,7 @@
     <!-- المودال لإرسال الرسالة -->
     <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
-            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة إلى نونتي ❤️</h2>
+            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
             <textarea id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..."
                       class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
 
@@ -292,7 +292,8 @@
             }
 
             try {
-                // ✅ التصحيح: مسار عام بـ 5 مقاطع (فردي)
+                // ✅ التعديل: المسار العام لحفظ الرسالة ليراها الجميع
+                // تم إضافة مقطع 'data' لجعل عدد المقاطع فردياً (5 مقاطع)
                 const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages_for_haneen');
                 
                 await addDoc(messagesRef, {
@@ -319,7 +320,8 @@
         }
 
         function setupMessageListener() {
-            // ✅ التصحيح: مسار عام بـ 5 مقاطع (فردي)
+            // ✅ التعديل: الاستماع إلى الرسائل من المسار العام ليراها الجميع
+            // تم إضافة مقطع 'data' لجعل عدد المقاطع فردياً (5 مقاطع)
             const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages_for_haneen');
             const q = query(messagesRef);
 
