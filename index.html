@@ -321,7 +321,7 @@ body {
             
             // إغلاق المودال بعد 3 ثوانٍ
             setTimeout(() => {
-                closeMessageModal();
+                window.closeMessageModal();
                 statusElement.classList.add('hidden');
             }, 3000);
         } else {
@@ -336,7 +336,6 @@ body {
     // **********************************************
 
     const audioPlayer = document.getElementById('audio-player');
-    const playPauseBtn = document.getElementById('play-pause-btn');
     const playPauseIcon = document.getElementById('play-pause-icon');
     const currentSongTitle = document.getElementById('current-song-title');
 
@@ -346,46 +345,50 @@ body {
 
     const CORRECT_PIN = '772009';
     let currentPin = '';
-    const pinDisplay = document.getElementById('pin-display').children;
+    const pinDisplayChildren = document.getElementById('pin-display').children;
     const loginScreen = document.getElementById('login-screen');
     const loginStatus = document.getElementById('login-status');
 
-    // جعل الدوال عامة لكي تستجيب للأزرار في HTML (التصحيح)
+    // 1. الدالة المسؤولة عن تحديث النقاط (يجب أن تكون عامة)
     window.updatePinDisplay = function() {
         for (let i = 0; i < 6; i++) {
             if (i < currentPin.length) {
-                pinDisplay[i].classList.add('pin-filled');
+                pinDisplayChildren[i].classList.add('pin-filled'); // لإظهار التوهج (تم الإدخال)
             } else {
-                pinDisplay[i].classList.remove('pin-filled');
+                pinDisplayChildren[i].classList.remove('pin-filled'); // لإخفاء التوهج (لم يتم الإدخال)
             }
         }
     }
 
+    // 2. الدالة المسؤولة عن إضافة رقم (يجب أن تكون عامة)
     window.appendPin = function(digit) {
         if (currentPin.length < 6) {
             currentPin += digit;
-            window.updatePinDisplay(); // استدعاء الدالة المصححة
+            window.updatePinDisplay(); // استدعاء الدالة العامة المصححة
         }
     };
 
+    // 3. الدالة المسؤولة عن المسح (يجب أن تكون عامة)
     window.clearPin = function() {
         currentPin = '';
-        window.updatePinDisplay(); // استدعاء الدالة المصححة
+        window.updatePinDisplay(); // استدعاء الدالة العامة المصححة
         loginStatus.classList.add('hidden');
     };
 
+    // 4. الدالة المسؤولة عن التحقق (يجب أن تكون عامة)
     window.checkPin = function() {
         if (currentPin === CORRECT_PIN) {
-            // النجاح: إخفاء شاشة القفل
+            // النجاح
             loginScreen.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden'); // السماح بالتمرير
-            document.body.style.overflowY = 'auto'; // تفعيل التمرير العمودي
+            document.body.classList.remove('overflow-hidden');
+            document.body.style.overflowY = 'auto';
         } else {
-            // الفشل: إظهار رسالة الخطأ ومسح الكود
+            // الفشل
             loginStatus.textContent = 'كلمة المرور غير صحيحة.';
             loginStatus.classList.remove('hidden');
+            // مسح الكود بعد فترة وجيزة
             setTimeout(() => {
-                window.clearPin(); // استدعاء الدالة المصححة
+                window.clearPin();
             }, 500);
         }
     };
