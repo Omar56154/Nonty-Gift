@@ -9,7 +9,7 @@
     <!-- تحميل Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* خط "Inter" لإضافة مظهر عصري */
+        /* خط "Cairo" لإضافة مظهر عصري */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
         :root {
             --primary-pink: #ff69b4; /* Pink (Hot Pink) */
@@ -363,19 +363,35 @@
         
         /*
         * ---------------------------------------------------
-        * ✅ مكان إضافة الأغاني:
-        * استبدل الروابط الموجودة بروابط الأغاني الخاصة بك (بصيغة MP3 أو WAV).
-        * يجب أن تكون الروابط "روابط عامة" يمكن الوصول إليها من الإنترنت
-        * (مثل روابط Dropbox أو Google Drive العامة، أو موقع رفع ملفات).
+        * ✅ مكان إضافة الأغاني (تم تصحيح الروابط لصيغة RAW/مباشرة):
         * ---------------------------------------------------
         */
         const playlist = [
-            { title: "All of Me - John Legend", url: "https://github.com/Omar56154/Nonty-Gift/blob/be794226aad47178af03cc6e629e4fc4a6d41a8a/audio/spotidownloader.com%20-%20All%20of%20Me%20-%20John%20Legend.mp3" },
-            { title: "Love Me Like You Do - Ellie Goulding", url: "https://github.com/Omar56154/Nonty-Gift/blob/3aae9ab6a5bda9bd780d0d7b5b33ca836d49eaf1/audio/Love%20Me%20Like%20You%20Do%20-%20Ellie%20Goulding.mp3" },
-            { title: "حسيني", url: "https://github.com/Omar56154/Nonty-Gift/blob/edbd99caca421fd6462cbd732dfe15fb5309dade/audio/TUL8TE%20-%20Heseeny%20I%20%D8%AA%D9%88%D9%88%D9%84%D9%8A%D8%AA%20-%20%D8%AD%D8%B3%D9%8A%D9%86%D9%8A(MP3_160K).mp3" },
-            { title: "دا لو اتساب", url: "https://github.com/Omar56154/Nonty-Gift/blob/3327b0ec6c186f84141e3f253772056e112ae1e9/audio/Amr%20Diab%20-%20Da%20Law%20Etsab%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%AF%D9%87%20%D9%84%D9%88%20%D8%A5%D8%AA%D8%B3%D8%A7%D8%A8(MP3_160K).mp3" },
-            { title: "انا وانت", url: "https://github.com/Omar56154/Nonty-Gift/blob/12b1f67965c7d6a51489b667973993c3c4fbbc53/audio/Amr%20Diab%20-%20Ana%20W%20Enta%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%A3%D9%86%D8%A7%20%D9%88%20%D8%A3%D9%86%D8%AA(MP3_160K).mp3" },
-            // يمكنك إضافة المزيد هنا { title: "عنوان الأغنية", url: "رابط الأغنية العام" },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "All of Me - John Legend", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/be794226aad47178af03cc6e629e4fc4a6d41a8a/audio/spotidownloader.com%20-%20All%20of%20Me%20-%20John%20Legend.mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "Love Me Like You Do - Ellie Goulding", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3aae9ab6a5bda9bd780d0d7b5b33ca836d49eaf1/audio/Love%20Me%20Like%20You%20Do%20-%20Ellie%20Goulding.mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "حسيني", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/edbd99caca421fd6462cbd732dfe15fb5309dade/audio/TUL8TE%20-%20Heseeny%20I%20%D8%AA%D9%88%D9%88%D9%84%D9%8A%D8%AA%20-%20%D8%AD%D8%B3%D9%8A%D9%86%D9%8A(MP3_160K).mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "دا لو اتساب", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3327b0ec6c186f84141e3f253772056e112ae1e9/audio/Amr%20Diab%20-%20Da%20Law%20Etsab%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%AF%D9%87%20%D9%84%D9%88%20%D8%A5%D8%AA%D8%B3%D8%A7%D8%A8(MP3_160K).mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "انا وانت", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/12b1f67965c7d6a51489b667973993c3c4fbbc53/audio/Amr%20Diab%20-%20Ana%20W%20Enta%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%A3%D9%86%D8%A7%20%D9%88%20%D8%A3%D9%86%D8%AA(MP3_160K).mp3" 
+            },
         ];
         
         let currentTrackIndex = 0;
@@ -430,15 +446,21 @@
 
         /*
         * ---------------------------------------------------
-        * ✅ مكان إضافة الصور:
-        * استبدل الروابط الموجودة بروابط صورك الخاصة.
-        * يجب أن تكون الروابط "روابط عامة" (مثل روابط Dropbox أو Google Drive العامة، أو موقع رفع صور).
-        * يمكنك أيضاً تغيير النصوص في "caption" لوصف كل صورة.
+        * ✅ مكان إضافة الصور (تم تصحيح الروابط لصيغة RAW/مباشرة):
         * ---------------------------------------------------
         */
         const cinematicImages = [
-            { url: "https://github.com/Omar56154/Nonty-Gift/blob/12b1f67965c7d6a51489b667973993c3c4fbbc53/images/nontymain.png", caption: "بحبهااا" },
-            { url: "https://github.com/Omar56154/Nonty-Gift/blob/320b9c789c93e40c0ce55499c0316fbd660dcab2/images/First%20Say.png", caption: "اول مره تقولهااا" },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/12b1f67965c7d6a51489b667973993c3c4fbbc53/images/nontymain.png", 
+                caption: "بحبهااا" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/320b9c789c93e40c0ce55499c0316fbd660dcab2/images/First%20Say.png", 
+                caption: "اول مره تقولهااا" 
+            },
+            // صورة placeholder
             { url: "https://placehold.co/800x600/0000ff/ffffff?text=صورة+3", caption: "لحظات السعادة الأبدية" },
             // يمكنك إضافة المزيد هنا: { url: "رابط الصورة العامة", caption: "وصف للصورة" },
         ];
