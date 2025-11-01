@@ -125,11 +125,11 @@
             </button>
         </div>
 
-        <!-- منطقة عرض الرسائل المحفوظة (تم إزالتها لضمان عمل Formspree) -->
+        <!-- منطقة عرض الرسائل المحفوظة (الآن تُظهر الرسائل العامة من Firebase) -->
         <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
             <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائل المحبين:</h2>
             <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
-                <p class="text-gray-400">لن تظهر الرسائل القديمة هنا. سيتم إرسالها إلى بريدك الإلكتروني.</p>
+                <p class="text-gray-400">لا توجد رسائل بعد.</p>
             </div>
         </div>
 
@@ -159,27 +159,26 @@
         <audio id="audio-player" onended="nextTrack()"></audio>
     </div>
 
-    <!-- المودال لإرسال الرسالة (تم تحويله إلى نموذج Formspree) -->
+    <!-- المودال لإرسال الرسالة -->
     <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
-        <form id="message-form" method="POST" action="https://formspree.io/f/mdkppprd" class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
+        <!-- تم استرجاع نموذج النقر (Button Click) بدلاً من نموذج الإرسال (Form) -->
+        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
             <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
             
-            <!-- هذا الحقل مخفي ويستخدم لعنوان الرد في بريدك الإلكتروني (اختياري) -->
-            <input type="hidden" name="_replyto" value="dromar720074@gmail.com">
-            
-            <textarea name="message" id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..." required minlength="5"
+            <textarea id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..."
                       class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
 
             <div class="flex justify-between items-center">
-                <button type="submit" class="glow-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition">
+                <!-- تم ربط الزر بدالة saveMessage() الخاصة بـ Firebase -->
+                <button onclick="saveMessage()" class="glow-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition">
                     إرسال الرسالة
                 </button>
-                <button type="button" onclick="closeMessageModal()" class="text-gray-400 hover:text-white transition">
+                <button onclick="closeMessageModal()" class="text-gray-400 hover:text-white transition">
                     إلغاء
                 </button>
             </div>
             <p id="message-status" class="mt-4 text-center text-sm text-green-400 hidden">تم إرسال رسالتك بنجاح!</p>
-        </form>
+        </div>
     </div>
 
     <!-- المودال لعرض الصور السينمائي -->
@@ -204,15 +203,64 @@
     </div>
 
 
-    <!-- سكربت JavaScript (تم حذف Firebase بالكامل) -->
+    <!-- سكربت Firebase و JavaScript -->
     <script type="module">
-        
+        // متغيرات Firebase الإلزامية
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // إعداد Firebase
+        let app, db, auth, userId;
+        let isFirebaseReady = false;
+
+        if (firebaseConfig) {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                setLogLevel('Debug'); // تفعيل تسجيل الأخطاء
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (!user) {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    }
+                    // بمجرد تأكيد المستخدم (سواء كان ضيفًا أو مستخدمًا فعليًا)
+                    userId = auth.currentUser?.uid || crypto.randomUUID();
+                    isFirebaseReady = true;
+
+                    console.log('Firebase and Auth Ready. User ID:', userId);
+                    
+                    // بعد تسجيل الدخول، نبدأ الاستماع للرسائل
+                    if (isFirebaseReady) {
+                        setupMessageListener();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+            }
+        } else {
+            console.error("Firebase config is missing. Message sending will not work.");
+        }
+
+
         // **********************************************
-        // 1. منطق إرسال الرسائل (Formspree)
+        // 1. منطق إرسال الرسائل (Firestore) - مُعاد تفعيلها
         // **********************************************
 
         window.openMessageModal = function() {
             document.getElementById('message-modal').classList.remove('hidden');
+            document.getElementById('message-status').classList.add('hidden');
         }
 
         window.closeMessageModal = function() {
@@ -220,15 +268,21 @@
             document.getElementById('message-input').value = ''; // مسح الإدخال
         }
 
-        // معالجة إرسال النموذج باستخدام JavaScript لمنع إعادة تحميل الصفحة
-        const form = document.getElementById('message-form');
-        const statusElement = document.getElementById('message-status');
+        window.saveMessage = async function() {
+            if (!isFirebaseReady) {
+                console.error("Firebase is not ready yet.");
+                document.getElementById('message-status').textContent = 'النظام غير جاهز بعد، حاول مرة أخرى.';
+                document.getElementById('message-status').classList.remove('hidden');
+                document.getElementById('message-status').classList.remove('text-green-400', 'text-red-400');
+                document.getElementById('message-status').classList.add('text-yellow-400');
+                return;
+            }
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // تحقق بسيط من النص
             const messageText = document.getElementById('message-input').value.trim();
+            const statusElement = document.getElementById('message-status');
+            
+            statusElement.classList.add('hidden');
+
             if (messageText.length < 5) {
                 statusElement.textContent = 'الرسالة قصيرة جداً (الحد الأدنى 5 أحرف).';
                 statusElement.classList.remove('hidden', 'text-green-400');
@@ -236,31 +290,66 @@
                 return;
             }
 
-            // إرسال البيانات
-            const response = await fetch(form.action, {
-                method: form.method,
-                body: new FormData(form),
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
+            try {
+                // المسار العام لحفظ الرسالة ليراها الجميع (5 مقاطع - صحيح)
+                const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages_for_haneen');
+                
+                await addDoc(messagesRef, {
+                    text: messageText,
+                    timestamp: serverTimestamp(),
+                    sender_id: userId, 
+                });
 
-            if (response.ok) {
-                statusElement.textContent = 'تم إرسال رسالتك بنجاح! ستصلك عبر الإيميل. ❤️';
+                statusElement.textContent = 'تم إرسال رسالتك بنجاح! ❤️';
                 statusElement.classList.remove('hidden', 'text-red-400');
                 statusElement.classList.add('text-green-400');
                 
-                // إغلاق المودال بعد 3 ثوانٍ
+                // إغلاق المودال بعد 2 ثوانٍ
                 setTimeout(() => {
                     closeMessageModal();
-                    statusElement.classList.add('hidden');
-                }, 3000);
-            } else {
+                }, 2000);
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
                 statusElement.textContent = 'حدث خطأ أثناء الإرسال.';
                 statusElement.classList.remove('hidden', 'text-green-400');
                 statusElement.classList.add('text-red-400');
             }
-        });
+        }
+
+        function setupMessageListener() {
+            // الاستماع إلى الرسائل من المسار العام ليراها الجميع (5 مقاطع - صحيح)
+            const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages_for_haneen');
+            const q = query(messagesRef);
+
+            onSnapshot(q, (snapshot) => {
+                const messagesList = document.getElementById('messages-list');
+                const messages = [];
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.timestamp?.toDate ? data.timestamp.toDate().toLocaleDateString('ar-EG') : 'الآن';
+                    messages.push({ ...data, date });
+                });
+
+                if (messages.length > 0) {
+                    messages.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0)); // ترتيب تنازلي
+                    messagesList.innerHTML = messages.map(msg => `
+                        <div class="bg-gray-700 p-3 rounded-lg border-l-4 border-pink-400">
+                            <p class="text-sm italic text-gray-300">${msg.date}</p>
+                            <p class="text-white">${msg.text}</p>
+                        </div>
+                    `).join('');
+                    document.getElementById('messages-display').classList.remove('hidden');
+                } else {
+                    messagesList.innerHTML = '<p class="text-gray-400">لا توجد رسائل بعد.</p>';
+                    document.getElementById('messages-display').classList.add('hidden');
+                }
+            }, (error) => {
+                console.error("Error listening to messages:", error);
+                document.getElementById('messages-list').innerHTML = '<p class="text-red-400">فشل تحميل الرسائل.</p>';
+            });
+        }
         
         // **********************************************
         // 2. منطق مشغل الموسيقى
