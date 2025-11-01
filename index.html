@@ -123,6 +123,10 @@
                 <i data-lucide="monitor-play" class="w-6 h-6 ml-2"></i>
                 عرض الصور السينمائي
             </button>
+            <button onclick="openAboutModal()" class="glow-button flex items-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
+                <i data-lucide="heart-handshake" class="w-6 h-6 ml-2"></i>
+                معلومات عنا
+            </button>
         </div>
 
         <!-- منطقة عرض الرسائل المحفوظة (تم إزالتها لضمان عمل Formspree) -->
@@ -178,7 +182,7 @@
                     إلغاء
                 </button>
             </div>
-            <p id="message-status" class="mt-4 text-center text-sm text-green-400 hidden">تم إرسال رسالتك بنجاح!</p>
+            <p id="message-status" class="mt-4 text-center text-sm text-green-400 hidden">تم إرسال رسالتك بنجاح! ستصلك عبر الإيميل.</p>
         </form>
     </div>
 
@@ -203,6 +207,31 @@
         </div>
     </div>
 
+    <!-- المودال الخاص بـ "معلومات عنا" -->
+    <div id="about-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-green-500 cinematic-modal-content max-h-full overflow-y-auto">
+            <h2 class="text-3xl font-bold text-center mb-6 text-green-400"> (معلومات عنا) 💖</h2>
+            
+            <!-- مكان لتعديل المحتوى الخاص بك -->
+            <p class="text-lg text-gray-300 mb-4">
+                دي تواريخ الحاجات اللي حصلت بينا:
+            </p>
+            
+            <ul class="list-disc list-inside space-y-3 text-gray-200 text-right">
+                <li><strong class="text-pink-400">تاريخ اول رساله بينا:</strong>  10/17/25, 9:45 AM </li>
+                <li><strong class="text-pink-400">تايرخ ميلاد نونتي:</strong> 2009/7/7 </li>
+                <li><strong class="text-pink-400">اكتر حاجه بحبها فيكي:</strong> رقتك وطيبتك وحنيتك</li>
+                <li><strong class="text-pink-400">رسالة مني إليك:</strong> بحبك يا احلا حاجه حصلت لي يا احلا نونه شفتهاا</li>
+            </ul>
+            
+            <div class="text-center mt-8">
+                <button type="button" onclick="closeAboutModal()" class="glow-button bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- سكربت JavaScript (تم حذف Firebase بالكامل) -->
     <script type="module">
@@ -213,6 +242,7 @@
 
         window.openMessageModal = function() {
             document.getElementById('message-modal').classList.remove('hidden');
+            statusElement.classList.add('hidden'); // إخفاء حالة الرسالة السابقة
         }
 
         window.closeMessageModal = function() {
@@ -247,7 +277,7 @@
 
             if (response.ok) {
                 statusElement.textContent = 'تم إرسال رسالتك بنجاح! ستصلك عبر الإيميل. ❤️';
-                statusElement.classList.remove('hidden', 'text-red-400');
+                statusElement.classList.remove('hidden', 'text-red-400', 'text-red-400');
                 statusElement.classList.add('text-green-400');
                 
                 // إغلاق المودال بعد 3 ثوانٍ
@@ -295,7 +325,7 @@
             // تم تحويل رابط GitHub 'blob' إلى 'raw'
             { 
                 title: "دا لو اتساب", 
-                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3327b0ec6c186f84141e3f253772056e112ae1e9/audio/Amr%20Diab%20-%20Da%20Law%20Etsab%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%AF%D9%87%20%D9%84%D9%88%20%D8%A5%D8%AA%D8%B3%D8%A7%D8%A8(MP3_160K).mp3" 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3327b0ec6c186f84141e3f253772056e112ae1e9/audio/Amr%20Diab%20-%20Da%20Law%20Etsab%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%AF%D9%87%20%D9%84%D9%88%20%DD8%A5%D8%AA%D8%B3%D8%A7%D8%A8(MP3_160K).mp3" 
             },
             // تم تحويل رابط GitHub 'blob' إلى 'raw'
             { 
@@ -439,10 +469,22 @@
             cinematicImageElement.classList.add('opacity-0');
             currentImageIndex = 0; // إعادة التعيين للبداية في المرة القادمة
         }
+        
+        // **********************************************
+        // 4. منطق "معلومات عنا"
+        // **********************************************
+
+        window.openAboutModal = function() {
+            document.getElementById('about-modal').classList.remove('hidden');
+        }
+        
+        window.closeAboutModal = function() {
+            document.getElementById('about-modal').classList.add('hidden');
+        }
 
 
         // **********************************************
-        // 4. تأثير القلوب العائمة (الجسيمات)
+        // 5. تأثير القلوب العائمة (الجسيمات)
         // **********************************************
 
         const heartContainer = document.getElementById('heart-container');
