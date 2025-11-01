@@ -125,7 +125,7 @@
             </button>
         </div>
 
-        <!-- منطقة عرض الرسائل المحفوظة (تم إزالتها لأنها لا تعمل مع الإيميل) -->
+        <!-- منطقة عرض الرسائل المحفوظة (تم إزالتها لضمان عمل Formspree) -->
         <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
             <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائل المحبين:</h2>
             <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
@@ -161,10 +161,10 @@
 
     <!-- المودال لإرسال الرسالة (تم تحويله إلى نموذج Formspree) -->
     <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
-        <form id="message-form" method="POST" action="https://formspree.io/f/mldzrzkd" class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
-            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة إلى نونتي ❤️</h2>
+        <form id="message-form" method="POST" action="https://formspree.io/f/mdkppprd" class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
+            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
             
-            <!-- هذا الحقل مخفي ويحتوي على عنوان البريد الإلكتروني الذي قمت بتحديده -->
+            <!-- هذا الحقل مخفي ويستخدم لعنوان الرد في بريدك الإلكتروني (اختياري) -->
             <input type="hidden" name="_replyto" value="dromar720074@gmail.com">
             
             <textarea name="message" id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..." required minlength="5"
@@ -213,7 +213,6 @@
 
         window.openMessageModal = function() {
             document.getElementById('message-modal').classList.remove('hidden');
-            // Formspree سيتولى إظهار رسالة النجاح
         }
 
         window.closeMessageModal = function() {
