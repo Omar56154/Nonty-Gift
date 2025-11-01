@@ -9,6 +9,27 @@
     <!-- تحميل Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+/* تنسيق لوحة المفاتيح */
+.keypad-button {
+    /* تطبيق تنسيقات Tailwind مباشرة هنا */
+    padding: 1rem; /* p-4 */
+    border-radius: 0.75rem; /* rounded-xl */
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 800; /* font-extrabold */
+    background-color: rgb(55 65 81); /* bg-gray-700 */
+    transition: all 0.15s ease;
+    box-shadow: 0 0 5px rgba(255, 105, 180, 0.3); /* ظل خفيف */
+}
+.keypad-button:hover {
+    background-color: rgb(75 85 99); /* hover:bg-gray-600 */
+}
+/* لتأثير التوهج عند إدخال كلمة المرور */
+.pin-filled {
+    background-color: #ff69b4; /* bg-pink-500 */
+}
+
+
+        
         /* خط "Cairo" لإضافة مظهر عصري */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
         :root {
@@ -16,6 +37,47 @@
             --dark-bg: #1a1a2e; /* Dark Blue/Purple */
         }
         body {
+            <!-- شاشة القفل ولوحة المفاتيح (PIN: 772009) -->
+<div id="login-screen" class="fixed inset-0 z-[100] bg-gray-900 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm text-center">
+        <h2 class="text-4xl font-bold text-pink-400 mb-6">أهلاً يا نونتي (H) 🔒</h2>
+        
+        <!-- حقل إدخال كلمة المرور -->
+        <div class="flex justify-center mb-6">
+            <div id="pin-display" class="flex space-x-3 space-x-reverse bg-gray-800 p-3 rounded-xl shadow-lg border border-pink-500">
+                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+            </div>
+        </div>
+
+        <p id="login-status" class="text-red-400 mb-4 hidden">كلمة المرور غير صحيحة.</p>
+
+        <!-- لوحة المفاتيح الرقمية (Keypad) -->
+        <div id="keypad" class="grid grid-cols-3 gap-3">
+            <button onclick="appendPin('1')" class="keypad-button">1</button>
+            <button onclick="appendPin('2')" class="keypad-button">2</button>
+            <button onclick="appendPin('3')" class="keypad-button">3</button>
+
+            <button onclick="appendPin('4')" class="keypad-button">4</button>
+            <button onclick="appendPin('5')" class="keypad-button">5</button>
+            <button onclick="appendPin('6')" class="keypad-button">6</button>
+
+            <button onclick="appendPin('7')" class="keypad-button">7</button>
+            <button onclick="appendPin('8')" class="keypad-button">8</button>
+            <button onclick="appendPin('9')" class="keypad-button">9</button>
+
+            <button onclick="clearPin()" class="keypad-button bg-gray-700 hover:bg-gray-600">مسح</button>
+            <button onclick="appendPin('0')" class="keypad-button">0</button>
+            <button onclick="checkPin()" class="keypad-button bg-pink-600 hover:bg-pink-700">دخول</button>
+        </div>
+    </div>
+</div>
+<!-- نهاية شاشة القفل -->
+        
             font-family: 'Cairo', sans-serif;
             background-color: var(--dark-bg);
             color: white;
@@ -301,12 +363,66 @@
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playPauseIcon = document.getElementById('play-pause-icon');
         const currentSongTitle = document.getElementById('current-song-title');
+
+        // **********************************************
+        // 0. منطق شاشة القفل (Keypad Logic)
+        // **********************************************
+
+        const CORRECT_PIN = '772009';
+        let currentPin = '';
+        const pinDisplay = document.getElementById('pin-display').children;
+        const loginScreen = document.getElementById('login-screen');
+        const loginStatus = document.getElementById('login-status');
+
+        function updatePinDisplay() {
+            for (let i = 0; i < 6; i++) {
+                if (i < currentPin.length) {
+                    pinDisplay[i].classList.add('pin-filled');
+                } else {
+                    pinDisplay[i].classList.remove('pin-filled');
+                }
+            }
+        }
+
+        window.appendPin = function(digit) {
+            if (currentPin.length < 6) {
+                currentPin += digit;
+                updatePinDisplay();
+            }
+        };
+
+        window.clearPin = function() {
+            currentPin = '';
+            updatePinDisplay();
+            loginStatus.classList.add('hidden');
+        };
+
+        window.checkPin = function() {
+            if (currentPin === CORRECT_PIN) {
+                // النجاح: إخفاء شاشة القفل
+                loginScreen.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden'); // السماح بالتمرير
+            } else {
+                // الفشل: إظهار رسالة الخطأ ومسح الكود
+                loginStatus.textContent = 'كلمة المرور غير صحيحة.';
+                loginStatus.classList.remove('hidden');
+                setTimeout(() => {
+                    clearPin();
+                }, 500);
+            }
+        };
+        
+        // إخفاء التمرير عند التحميل
+        document.body.classList.add('overflow-hidden'); 
+        
+        // ** تأكد أنك تحذف هنا أي أكواد قديمة لـ Firebase (مثل الدوال saveMessage, setupMessageListener) **
         
         /*
         * ---------------------------------------------------
         * ✅ مكان إضافة الأغاني (تم تصحيح الروابط لصيغة RAW/مباشرة):
         * ---------------------------------------------------
-        */
+*/
+        
         const playlist = [
             // تم تحويل رابط GitHub 'blob' إلى 'raw'
             { 
