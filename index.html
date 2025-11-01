@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى نونتي (حنين H) 💗</title>
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* خط "Inter" لإضافة مظهر عصري */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        :root {
+            --primary-pink: #ff69b4; /* Pink (Hot Pink) */
+            --dark-bg: #1a1a2e; /* Dark Blue/Purple */
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto; /* للسماح بالتمرير إذا كان المحتوى طويلاً */
+            position: relative;
+        }
+
+        /* تنسيق الأزرار المشعة */
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-pink), 0 0 20px rgba(255, 105, 180, 0.5);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 15px var(--primary-pink), 0 0 30px var(--primary-pink);
+            transform: scale(1.05);
+        }
+
+        /* تنسيق مشغل الموسيقى */
+        #audio-player-controls {
+            background-color: rgba(42, 42, 70, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        /* تأثير القلوب (الجسيمات) */
+        .heart {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: var(--primary-pink);
+            transform: rotate(-45deg);
+            pointer-events: none; /* لا تتداخل مع النقر */
+            animation: heart-fall linear infinite;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: var(--primary-pink);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -50%;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 50%;
+        }
+
+        @keyframes heart-fall {
+            0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(-45deg); opacity: 0; }
+        }
+
+        /* تنسيق شاشة العرض السينمائي (النمط المودال) */
+        .cinematic-modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            max-width: 90vw;
+            max-height: 90vh;
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
+        }
+
+        .cinematic-image {
+            transition: opacity 1.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="p-4 relative">
+
+    <!-- حاوية القلوب (الجسيمات) -->
+    <div id="heart-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- المحتوى الرئيسي (طبقة علوية) -->
+    <div class="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto py-10">
+
+        <!-- الاسم المطلوب في منتصف الصفحة -->
+        <h1 id="main-title" class="text-6xl md:text-8xl font-extrabold text-white mb-8 p-4 rounded-xl relative">
+            <span style="text-shadow: 0 0 15px var(--primary-pink), 0 0 30px rgba(255, 105, 180, 0.8);">
+                Nonty (Haneen (H)💗)
+            </span>
+        </h1>
+
+        <p class="text-xl text-gray-300 mb-12">أهلاً بكِ في عالمنا الخاص!</p>
+
+        <!-- منطقة الأزرار -->
+        <div class="flex flex-wrap justify-center gap-6 mb-16">
+            <button onclick="openMessageModal()" class="glow-button flex items-center bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
+                <i data-lucide="message-square-heart" class="w-6 h-6 ml-2"></i>
+                اكتبي لي شيئًا
+            </button>
+            <button onclick="openCinematicModal()" class="glow-button flex items-center bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
+                <i data-lucide="monitor-play" class="w-6 h-6 ml-2"></i>
+                عرض الصور السينمائي
+            </button>
+        </div>
+
+        <!-- منطقة عرض الرسائل المحفوظة (اختياري) -->
+        <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
+            <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائلها المحفوظة:</h2>
+            <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
+                <p class="text-gray-400">لا توجد رسائل بعد.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- مشغل الموسيقى (ثابت في الأسفل) -->
+    <div id="audio-player-controls" class="fixed bottom-0 w-full p-4 rounded-t-2xl shadow-2xl z-20">
+        <div class="flex flex-col md:flex-row items-center justify-center max-w-xl mx-auto space-y-3 md:space-y-0 md:space-x-6 md:space-x-reverse">
+            <!-- معلومات الأغنية -->
+            <div class="text-center md:text-right flex-grow">
+                <p class="text-sm text-pink-400">قيد التشغيل:</p>
+                <p id="current-song-title" class="text-lg font-semibold text-white">تحميل...</p>
+            </div>
+            <!-- عناصر التحكم -->
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <button onclick="prevTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
+                    <i data-lucide="skip-back" class="w-6 h-6 text-pink-400"></i>
+                </button>
+                <button id="play-pause-btn" onclick="togglePlayPause()" class="p-4 bg-pink-500 rounded-full hover:bg-pink-600 transition glow-button">
+                    <i id="play-pause-icon" data-lucide="play" class="w-8 h-8 text-white"></i>
+                </button>
+                <button onclick="nextTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
+                    <i data-lucide="skip-forward" class="w-6 h-6 text-pink-400"></i>
+                </button>
+            </div>
+        </div>
+        <audio id="audio-player" onended="nextTrack()"></audio>
+    </div>
+
+    <!-- المودال لإرسال الرسالة -->
+    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
+            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة إلى نونتي ❤️</h2>
+            <textarea id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..."
+                      class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
+
+            <div class="flex justify-between items-center">
+                <button onclick="saveMessage()" class="glow-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition">
+                    إرسال الرسالة
+                </button>
+                <button onclick="closeMessageModal()" class="text-gray-400 hover:text-white transition">
+                    إلغاء
+                </button>
+            </div>
+            <p id="message-status" class="mt-4 text-center text-sm text-green-400 hidden">تم إرسال رسالتك بنجاح!</p>
+        </div>
+    </div>
+
+    <!-- المودال لعرض الصور السينمائي -->
+    <div id="cinematic-modal" class="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4 hidden">
+        <div class="relative w-full h-full flex items-center justify-center">
+            <!-- زر الإغلاق -->
+            <button onclick="closeCinematicModal()" class="absolute top-4 right-4 text-white p-3 rounded-full bg-gray-800 hover:bg-gray-700 z-50">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- حاوية الصورة -->
+            <div class="w-full h-full flex items-center justify-center">
+                <img id="cinematic-image" src="" alt="صورة الإهداء" class="cinematic-image max-w-full max-h-full object-contain rounded-lg shadow-2xl opacity-0 transition-opacity duration-1000">
+            </div>
+
+            <!-- معلومات الصورة -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 p-3 rounded-xl text-white text-center">
+                <p id="cinematic-caption" class="text-lg font-semibold"></p>
+                <p id="cinematic-counter" class="text-sm text-gray-400"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- سكربت Firebase و JavaScript -->
+    <script type="module">
+        // متغيرات Firebase الإلزامية
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // إعداد Firebase
+        let app, db, auth, userId;
+        let isFirebaseReady = false;
+
+        if (firebaseConfig) {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                setLogLevel('Debug'); // تفعيل تسجيل الأخطاء
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (!user) {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    }
+                    // بمجرد تأكيد المستخدم (سواء كان ضيفًا أو مستخدمًا فعليًا)
+                    userId = auth.currentUser?.uid || crypto.randomUUID();
+                    isFirebaseReady = true;
+
+                    console.log('Firebase and Auth Ready. User ID:', userId);
+
+                    // إظهار معرف المستخدم في مكان ما لتسهيل العثور على الرسائل
+                    // بما أن الموقع مخصص، سنظهر معرف المستخدم في وحدة التحكم
+                    document.getElementById('main-title').title = `Your User ID: ${userId}`;
+                    
+                    // بعد تسجيل الدخول، نبدأ الاستماع للرسائل
+                    if (isFirebaseReady) {
+                        setupMessageListener();
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization Error:", error);
+            }
+        } else {
+            console.error("Firebase config is missing. Message sending will not work.");
+        }
+
+
+        // **********************************************
+        // 1. منطق إرسال الرسائل (Firestore)
+        // **********************************************
+
+        window.openMessageModal = function() {
+            document.getElementById('message-modal').classList.remove('hidden');
+            document.getElementById('message-status').classList.add('hidden');
+        }
+
+        window.closeMessageModal = function() {
+            document.getElementById('message-modal').classList.add('hidden');
+            document.getElementById('message-input').value = ''; // مسح الإدخال
+        }
+
+        window.saveMessage = async function() {
+            if (!isFirebaseReady) {
+                console.error("Firebase is not ready yet.");
+                document.getElementById('message-status').textContent = 'النظام غير جاهز بعد، حاول مرة أخرى.';
+                document.getElementById('message-status').classList.remove('hidden');
+                document.getElementById('message-status').classList.remove('text-green-400', 'text-red-400');
+                document.getElementById('message-status').classList.add('text-yellow-400');
+                return;
+            }
+
+            const messageText = document.getElementById('message-input').value.trim();
+            const statusElement = document.getElementById('message-status');
+            
+            statusElement.classList.add('hidden');
+
+            if (messageText.length < 5) {
+                statusElement.textContent = 'الرسالة قصيرة جداً (الحد الأدنى 5 أحرف).';
+                statusElement.classList.remove('hidden', 'text-green-400');
+                statusElement.classList.add('text-red-400');
+                return;
+            }
+
+            try {
+                // المسار الخاص للمستخدم لإرسال رسائل لحنين
+                const messagesRef = collection(db, 'artifacts', appId, 'users', userId, 'haneen_messages');
+                
+                await addDoc(messagesRef, {
+                    text: messageText,
+                    timestamp: serverTimestamp(),
+                    sender_id: userId,
+                });
+
+                statusElement.textContent = 'تم إرسال رسالتك بنجاح! ❤️';
+                statusElement.classList.remove('hidden', 'text-red-400');
+                statusElement.classList.add('text-green-400');
+                
+                // إغلاق المودال بعد 2 ثوانٍ
+                setTimeout(() => {
+                    closeMessageModal();
+                }, 2000);
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                statusElement.textContent = 'حدث خطأ أثناء الإرسال.';
+                statusElement.classList.remove('hidden', 'text-green-400');
+                statusElement.classList.add('text-red-400');
+            }
+        }
+
+        function setupMessageListener() {
+            // الاستماع إلى الرسائل الخاصة بهذا المستخدم فقط
+            const messagesRef = collection(db, 'artifacts', appId, 'users', userId, 'haneen_messages');
+            const q = query(messagesRef);
+
+            onSnapshot(q, (snapshot) => {
+                const messagesList = document.getElementById('messages-list');
+                const messages = [];
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const date = data.timestamp?.toDate ? data.timestamp.toDate().toLocaleDateString('ar-EG') : 'الآن';
+                    messages.push({ ...data, date });
+                });
+
+                if (messages.length > 0) {
+                    messages.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0)); // ترتيب تنازلي
+                    messagesList.innerHTML = messages.map(msg => `
+                        <div class="bg-gray-700 p-3 rounded-lg border-l-4 border-pink-400">
+                            <p class="text-sm italic text-gray-300">${msg.date}</p>
+                            <p class="text-white">${msg.text}</p>
+                        </div>
+                    `).join('');
+                    document.getElementById('messages-display').classList.remove('hidden');
+                } else {
+                    messagesList.innerHTML = '<p class="text-gray-400">لا توجد رسائل بعد.</p>';
+                    document.getElementById('messages-display').classList.add('hidden');
+                }
+            }, (error) => {
+                console.error("Error listening to messages:", error);
+                document.getElementById('messages-list').innerHTML = '<p class="text-red-400">فشل تحميل الرسائل.</p>';
+            });
+        }
+        
+        // **********************************************
+        // 2. منطق مشغل الموسيقى
+        // **********************************************
+
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const currentSongTitle = document.getElementById('current-song-title');
+        
+        /*
+        * ---------------------------------------------------
+        * ✅ مكان إضافة الأغاني:
+        * استبدل الروابط الموجودة بروابط الأغاني الخاصة بك (بصيغة MP3 أو WAV).
+        * يجب أن تكون الروابط "روابط عامة" يمكن الوصول إليها من الإنترنت
+        * (مثل روابط Dropbox أو Google Drive العامة، أو موقع رفع ملفات).
+        * ---------------------------------------------------
+        */
+        const playlist = [
+            { title: "الأغنية الهادئة الأولى (ضع اسمها هنا)", url: "https://www.learning-arabic.com/audio/music/ya_ghayeb.mp3" },
+            { title: "أغنيتنا المفضلة", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { title: "لحن الذكريات السعيدة", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            // يمكنك إضافة المزيد هنا { title: "عنوان الأغنية", url: "رابط الأغنية العام" },
+        ];
+        
+        let currentTrackIndex = 0;
+
+        function loadTrack(index) {
+            currentTrackIndex = index % playlist.length;
+            if (currentTrackIndex < 0) {
+                currentTrackIndex = playlist.length - 1;
+            }
+            const track = playlist[currentTrackIndex];
+            audioPlayer.src = track.url;
+            currentSongTitle.textContent = track.title;
+            audioPlayer.load();
+        }
+
+        window.togglePlayPause = function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                lucide.createIcons(); // لتحديث الأيقونة
+                playPauseIcon.setAttribute('data-lucide', 'pause');
+            } else {
+                audioPlayer.pause();
+                lucide.createIcons();
+                playPauseIcon.setAttribute('data-lucide', 'play');
+            }
+            // إعادة رسم الأيقونات لضمان التحديث
+            setTimeout(() => { lucide.createIcons(); }, 10);
+        }
+
+        window.nextTrack = function() {
+            const wasPlaying = !audioPlayer.paused;
+            loadTrack(currentTrackIndex + 1);
+            if (wasPlaying) {
+                audioPlayer.play();
+            }
+        }
+
+        window.prevTrack = function() {
+            const wasPlaying = !audioPlayer.paused;
+            loadTrack(currentTrackIndex - 1);
+            if (wasPlaying) {
+                audioPlayer.play();
+            }
+        }
+        
+        // تحميل الأغنية الأولى عند بدء التشغيل
+        loadTrack(0);
+
+        // **********************************************
+        // 3. منطق عرض الصور السينمائي
+        // **********************************************
+
+        /*
+        * ---------------------------------------------------
+        * ✅ مكان إضافة الصور:
+        * استبدل الروابط الموجودة بروابط صورك الخاصة.
+        * يجب أن تكون الروابط "روابط عامة" (مثل روابط Dropbox أو Google Drive العامة، أو موقع رفع صور).
+        * يمكنك أيضاً تغيير النصوص في "caption" لوصف كل صورة.
+        * ---------------------------------------------------
+        */
+        const cinematicImages = [
+            { url: "https://placehold.co/800x600/ff69b4/ffffff?text=صورة+1", caption: "أول صورة لنا معاً!" },
+            { url: "https://placehold.co/800x600/8a2be2/ffffff?text=صورة+2", caption: "ذكرى لا تُنسى" },
+            { url: "https://placehold.co/800x600/0000ff/ffffff?text=صورة+3", caption: "لحظات السعادة الأبدية" },
+            // يمكنك إضافة المزيد هنا: { url: "رابط الصورة العامة", caption: "وصف للصورة" },
+        ];
+
+        let cinematicTimer;
+        let currentImageIndex = 0;
+        const cinematicImageElement = document.getElementById('cinematic-image');
+        const cinematicCaptionElement = document.getElementById('cinematic-caption');
+        const cinematicCounterElement = document.getElementById('cinematic-counter');
+        const SLIDESHOW_DURATION = 4000; // 4 ثواني لكل صورة
+
+        function showImage(index) {
+            if (cinematicImages.length === 0) return;
+
+            currentImageIndex = index % cinematicImages.length;
+            if (currentImageIndex < 0) {
+                currentImageIndex = cinematicImages.length - 1;
+            }
+
+            const image = cinematicImages[currentImageIndex];
+
+            // إخفاء الصورة قبل تغيير المصدر
+            cinematicImageElement.classList.remove('opacity-100');
+            cinematicImageElement.classList.add('opacity-0');
+
+            setTimeout(() => {
+                // تغيير المصدر والتسمية
+                cinematicImageElement.src = image.url;
+                cinematicCaptionElement.textContent = image.caption;
+                cinematicCounterElement.textContent = `صورة ${currentImageIndex + 1} من ${cinematicImages.length}`;
+
+                // إظهار الصورة تدريجياً
+                cinematicImageElement.classList.remove('opacity-0');
+                cinematicImageElement.classList.add('opacity-100');
+            }, 500); // نصف ثانية للانتقال (fade out)
+        }
+
+        function startSlideshow() {
+            if (cinematicImages.length === 0) return;
+            showImage(currentImageIndex);
+            
+            cinematicTimer = setInterval(() => {
+                showImage(currentImageIndex + 1);
+            }, SLIDESHOW_DURATION);
+        }
+
+        window.openCinematicModal = function() {
+            document.getElementById('cinematic-modal').classList.remove('hidden');
+            startSlideshow();
+        }
+
+        window.closeCinematicModal = function() {
+            document.getElementById('cinematic-modal').classList.add('hidden');
+            clearInterval(cinematicTimer);
+            cinematicImageElement.classList.remove('opacity-100');
+            cinematicImageElement.classList.add('opacity-0');
+            currentImageIndex = 0; // إعادة التعيين للبداية في المرة القادمة
+        }
+
+
+        // **********************************************
+        // 4. تأثير القلوب العائمة (الجسيمات)
+        // **********************************************
+
+        const heartContainer = document.getElementById('heart-container');
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            
+            // تحديد موقع عشوائي في الجزء السفلي من الشاشة
+            const size = Math.random() * 20 + 10; // حجم بين 10px و 30px
+            const duration = Math.random() * 5 + 7; // مدة الحركة بين 7s و 12s
+            const delay = Math.random() * 2; // تأخير عشوائي
+
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.left = `${Math.random() * 100}vw`; // موقع أفقي عشوائي
+            heart.style.bottom = `-${size}px`; // يبدأ من أسفل الشاشة
+            heart.style.animationDuration = `${duration}s`;
+            heart.style.animationDelay = `${delay}s`;
+
+            // لجعل القلوب تتحرك باتجاه مختلف قليلاً
+            const moveX = (Math.random() - 0.5) * 50; // حركة أفقية عشوائية
+            heart.style.setProperty('--move-x', `${moveX}px`);
+
+            heartContainer.appendChild(heart);
+
+            // إزالة القلب بعد انتهاء حركته لتوفير الذاكرة
+            setTimeout(() => {
+                heart.remove();
+            }, (duration + delay) * 1000);
+        }
+
+        function startHeartEffect() {
+            // إنشاء قلب جديد كل 300 مللي ثانية
+            setInterval(createHeart, 300);
+            // إنشاء قلوب أولية لملء الشاشة بسرعة
+            for (let i = 0; i < 20; i++) {
+                createHeart();
+            }
+        }
+
+        // تشغيل تأثير القلوب عند تحميل الصفحة
+        window.onload = function() {
+            startHeartEffect();
+            lucide.createIcons(); // لتفعيل أيقونات Lucide
+        };
+
+    </script>
+</body>
+</html>
