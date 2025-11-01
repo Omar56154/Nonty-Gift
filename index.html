@@ -111,7 +111,7 @@
             </span>
         </h1>
 
-        <p class="text-xl text-gray-300 mb-12">Welcome to your web , my baby ❤️!</p>
+        <p class="text-xl text-gray-300 mb-12">Welcome to your web, my baby!</p>
 
         <!-- منطقة الأزرار -->
         <div class="flex flex-wrap justify-center gap-6 mb-16">
@@ -127,7 +127,7 @@
 
         <!-- منطقة عرض الرسائل المحفوظة (اختياري) -->
         <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
-            <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائلها المحفوظة:</h2>
+            <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائل المحبين:</h2>
             <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
                 <p class="text-gray-400">لا توجد رسائل بعد.</p>
             </div>
@@ -162,7 +162,7 @@
     <!-- المودال لإرسال الرسالة -->
     <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
-            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة إلى نونتي ❤️</h2>
+            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
             <textarea id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..."
                       class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
 
@@ -292,13 +292,14 @@
             }
 
             try {
-                // المسار الخاص للمستخدم لإرسال رسائل لحنين
-                const messagesRef = collection(db, 'artifacts', appId, 'users', userId, 'haneen_messages');
+                // ✅ التعديل: المسار العام لحفظ الرسالة ليراها الجميع
+                // تم إضافة مقطع 'data' لجعل عدد المقاطع فردياً (5 مقاطع)
+                const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages_for_haneen');
                 
                 await addDoc(messagesRef, {
                     text: messageText,
                     timestamp: serverTimestamp(),
-                    sender_id: userId,
+                    sender_id: userId, 
                 });
 
                 statusElement.textContent = 'تم إرسال رسالتك بنجاح! ❤️';
@@ -319,8 +320,9 @@
         }
 
         function setupMessageListener() {
-            // الاستماع إلى الرسائل الخاصة بهذا المستخدم فقط
-            const messagesRef = collection(db, 'artifacts', appId, 'users', userId, 'haneen_messages');
+            // ✅ التعديل: الاستماع إلى الرسائل من المسار العام ليراها الجميع
+            // تم إضافة مقطع 'data' لجعل عدد المقاطع فردياً (5 مقاطع)
+            const messagesRef = collection(db, 'artifacts', appId, 'public', 'data', 'messages_for_haneen');
             const q = query(messagesRef);
 
             onSnapshot(q, (snapshot) => {
@@ -440,6 +442,13 @@
         // تحميل الأغنية الثانية (الفهرس 1) عند بدء التشغيل
         loadTrack(1);
 
+        // ** محاولة التشغيل التلقائي (قد يفشل بسبب قيود المتصفح) **
+        audioPlayer.play().catch(error => {
+            // إذا فشل التشغيل التلقائي (وهذا متوقع)، لا تفعل شيئًا.
+            // المستخدم سيحتاج للضغط على زر التشغيل يدوياً
+            console.log("Autoplay blocked, user must press play.");
+        });
+
         // **********************************************
         // 3. منطق عرض الصور السينمائي
         // **********************************************
@@ -460,8 +469,11 @@
                 url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/320b9c789c93e40c0ce55499c0316fbd660dcab2/images/First%20Say.png", 
                 caption: "اول مره تقولهااا" 
             },
-            // صورة placeholder
-            { url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/7f5bb64938d77a017ac934f5d9f38987c5e4a374/images/Screenshot_20251101_143401.jpg", caption: "دي بتاعتي انا وبسس 💗" },
+            // الصورة الجديدة (تمت إضافتها وتصحيح الرابط)
+            { 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/7f5bb64938d77a017ac934f5d9f38987c5e4a374/images/Screenshot_20251101_143401.jpg", 
+                caption: "دي بتاعتي انا وبسس 💗" 
+            },
             // يمكنك إضافة المزيد هنا: { url: "رابط الصورة العامة", caption: "وصف للصورة" },
         ];
 
