@@ -1,637 +1,495 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إلى نونتي (حنين H) 💗</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-/* تنسيق لوحة المفاتيح */
-.keypad-button {
-/* تطبيق تنسيقات Tailwind يدوياً هنا لضمان التوافق */
-padding: 1rem;
-border-radius: 0.75rem;
-font-size: 1.875rem;
-font-weight: 800;
-background-color: rgb(55 65 81); /* bg-gray-700 */
-transition: all 0.15s ease;
-box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
-}
-.keypad-button:hover {
-background-color: rgb(75 85 99); /* hover:bg-gray-600 */
-}
-/* لتأثير التوهج عند إدخال كلمة المرور */
-.pin-filled {
-background-color: #ff69b4; /* bg-pink-500 */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى نونتي (حنين H) 💗</title>
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* خط "Cairo" لإضافة مظهر عصري */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        :root {
+            --primary-pink: #ff69b4; /* Pink (Hot Pink) */
+            --dark-bg: #1a1a2e; /* Dark Blue/Purple */
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto; /* للسماح بالتمرير إذا كان المحتوى طويلاً */
+            position: relative;
+        }
 
-/* خط "Cairo" لإضافة مظهر عصري */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-:root {
-    --primary-pink: #ff69b4; /* Pink (Hot Pink) */
-    --dark-bg: #1a1a2e; /* Dark Blue/Purple */
-}
-body {
-    font-family: 'Cairo', sans-serif;
-    background-color: var(--dark-bg);
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    /* عند التحميل يتم إخفاء التمرير بواسطة JS، وعند النجاح يتم عرضه لـ mobile scroll */
-    overflow-x: hidden;
-    overflow-y: hidden;
-    position: relative;
-}
+        /* تنسيق الأزرار المشعة */
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-pink), 0 0 20px rgba(255, 105, 180, 0.5);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 15px var(--primary-pink), 0 0 30px var(--primary-pink);
+            transform: scale(1.05);
+        }
 
-/* تنسيق الأزرار المشعة */
-.glow-button {
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px var(--primary-pink), 0 0 20px rgba(255, 105, 180, 0.5);
-}
-.glow-button:hover {
-    box-shadow: 0 0 15px var(--primary-pink), 0 0 30px var(--primary-pink);
-    transform: scale(1.05);
-}
+        /* تنسيق مشغل الموسيقى */
+        #audio-player-controls {
+            background-color: rgba(42, 42, 70, 0.8);
+            backdrop-filter: blur(5px);
+        }
 
-/* تنسيق مشغل الموسيقى */
-#audio-player-controls {
-    background-color: rgba(42, 42, 70, 0.8);
-    backdrop-filter: blur(5px);
-}
+        /* تأثير القلوب (الجسيمات) */
+        .heart {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: var(--primary-pink);
+            transform: rotate(-45deg);
+            pointer-events: none; /* لا تتداخل مع النقر */
+            animation: heart-fall linear infinite;
+            z-index: 0;
+            opacity: 0;
+        }
 
-/* تأثير القلوب (الجسيمات) */
-.heart {
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    background-color: var(--primary-pink);
-    transform: rotate(-45deg);
-    pointer-events: none; /* لا تتداخل مع النقر */
-    animation: heart-fall linear infinite;
-    z-index: 0;
-    opacity: 0;
-}
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: var(--primary-pink);
+            border-radius: 50%;
+        }
 
-.heart::before,
-.heart::after {
-    content: "";
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    background-color: var(--primary-pink);
-    border-radius: 50%;
-}
+        .heart::before {
+            top: -50%;
+            left: 0;
+        }
 
-.heart::before {
-    top: -50%;
-    left: 0;
-}
+        .heart::after {
+            top: 0;
+            left: 50%;
+        }
 
-.heart::after {
-    top: 0;
-    left: 50%;
-}
+        @keyframes heart-fall {
+            0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(-45deg); opacity: 0; }
+        }
 
-@keyframes heart-fall {
-    0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
-    100% { transform: translateY(-100vh) rotate(-45deg); opacity: 0; }
-}
+        /* تنسيق شاشة العرض السينمائي (النمط المودال) */
+        .cinematic-modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            max-width: 90vw;
+            max-height: 90vh;
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
+        }
 
-/* تنسيق شاشة العرض السينمائي (النمط المودال) */
-.cinematic-modal-content {
-    background: rgba(0, 0, 0, 0.95);
-    max-width: 90vw;
-    max-height: 90vh;
-    box-shadow: 0 0 50px rgba(255, 105, 180, 0.5);
-}
-
-.cinematic-image {
-    transition: opacity 1.5s ease-in-out;
-}
-</style>
+        .cinematic-image {
+            transition: opacity 1.5s ease-in-out;
+        }
+    </style>
 </head>
 <body class="p-4 relative">
 
-<div id="login-screen" class="fixed inset-0 z-[100] bg-gray-900 flex items-center justify-center p-4">
-    <div class="w-full max-w-sm text-center">
-        <h2 class="text-4xl font-bold text-pink-400 mb-6">أهلاً يا نونتي (H) 🔒</h2>
-        
-        <div class="flex justify-center mb-6">
-            <div id="pin-display" class="flex space-x-3 space-x-reverse bg-gray-800 p-3 rounded-xl shadow-lg border border-pink-500">
-                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
-                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
-                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
-                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
-                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
-                <span class="w-6 h-6 rounded-full bg-transparent border border-pink-400"></span>
+    <!-- حاوية القلوب (الجسيمات) -->
+    <div id="heart-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- المحتوى الرئيسي (طبقة علوية) -->
+    <div class="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto py-10">
+
+        <!-- الاسم المطلوب في منتصف الصفحة -->
+        <h1 id="main-title" class="text-6xl md:text-8xl font-extrabold text-white mb-8 p-4 rounded-xl relative">
+            <span style="text-shadow: 0 0 15px var(--primary-pink), 0 0 30px rgba(255, 105, 180, 0.8);">
+                Nonty (Haneen (H)💗)
+            </span>
+        </h1>
+
+        <p class="text-xl text-gray-300 mb-12">Welcome to your web, my baby!</p>
+
+        <!-- منطقة الأزرار -->
+        <div class="flex flex-wrap justify-center gap-6 mb-16">
+            <button onclick="openMessageModal()" class="glow-button flex items-center bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
+                <i data-lucide="message-square-heart" class="w-6 h-6 ml-2"></i>
+                اكتبي لي شيئًا
+            </button>
+            <button onclick="openCinematicModal()" class="glow-button flex items-center bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
+                <i data-lucide="monitor-play" class="w-6 h-6 ml-2"></i>
+                عرض الصور السينمائي
+            </button>
+        </div>
+
+        <!-- منطقة عرض الرسائل المحفوظة (تم إزالتها لضمان عمل Formspree) -->
+        <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
+            <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائل المحبين:</h2>
+            <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
+                <p class="text-gray-400">لن تظهر الرسائل القديمة هنا. سيتم إرسالها إلى بريدك الإلكتروني.</p>
             </div>
         </div>
 
-        <p id="login-status" class="text-red-400 mb-4 hidden">كلمة المرور غير صحيحة.</p>
-
-        <div id="keypad" class="grid grid-cols-3 gap-3">
-            <button onclick="appendPin('1')" class="keypad-button">1</button>
-            <button onclick="appendPin('2')" class="keypad-button">2</button>
-            <button onclick="appendPin('3')" class="keypad-button">3</button>
-
-            <button onclick="appendPin('4')" class="keypad-button">4</button>
-            <button onclick="appendPin('5')" class="keypad-button">5</button>
-            <button onclick="appendPin('6')" class="keypad-button">6</button>
-
-            <button onclick="appendPin('7')" class="keypad-button">7</button>
-            <button onclick="appendPin('8')" class="keypad-button">8</button>
-            <button onclick="appendPin('9')" class="keypad-button">9</button>
-
-            <button onclick="clearPin()" class="keypad-button bg-gray-700 hover:bg-gray-600">مسح</button>
-            <button onclick="appendPin('0')" class="keypad-button">0</button>
-            <button onclick="checkPin()" class="keypad-button bg-pink-600 hover:bg-pink-700">دخول</button>
-        </div>
-    </div>
-</div>
-<div id="heart-container" class="fixed inset-0 pointer-events-none z-0"></div>
-
-<div class="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl mx-auto py-10">
-
-    <h1 id="main-title" class="text-6xl md:text-8xl font-extrabold text-white mb-8 p-4 rounded-xl relative">
-        <span style="text-shadow: 0 0 15px var(--primary-pink), 0 0 30px rgba(255, 105, 180, 0.8);">
-            Nonty (Haneen (H)💗)
-        </span>
-    </h1>
-
-    <p class="text-xl text-gray-300 mb-12">Welcome to your web, my baby (Haneen Abdelghafar) !</p>
-
-    <div class="flex flex-wrap justify-center gap-6 mb-16">
-        <button onclick="openMessageModal()" class="glow-button flex items-center bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
-            <i data-lucide="message-square-heart" class="w-6 h-6 ml-2"></i>
-            اكتبي لي شيئًا
-        </button>
-        <button onclick="openCinematicModal()" class="glow-button flex items-center bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
-            <i data-lucide="monitor-play" class="w-6 h-6 ml-2"></i>
-            عرض الصور السينمائي
-        </button>
-        <button onclick="openAboutModal()" class="glow-button flex items-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg">
-            <i data-lucide="heart-handshake" class="w-6 h-6 ml-2"></i>
-            معلومات عنا
-        </button>
     </div>
 
-    <div id="messages-display" class="w-full max-w-lg mt-8 p-4 bg-gray-800 rounded-xl shadow-2xl hidden">
-        <h2 class="text-2xl font-bold mb-4 text-pink-300">رسائل المحبين:</h2>
-        <div id="messages-list" class="space-y-3 max-h-48 overflow-y-auto">
-            <p class="text-gray-400">لن تظهر الرسائل القديمة هنا. سيتم إرسالها إلى بريدك الإلكتروني.</p>
+    <!-- مشغل الموسيقى (ثابت في الأسفل) -->
+    <div id="audio-player-controls" class="fixed bottom-0 w-full p-4 rounded-t-2xl shadow-2xl z-20">
+        <div class="flex flex-col md:flex-row items-center justify-center max-w-xl mx-auto space-y-3 md:space-y-0 md:space-x-6 md:space-x-reverse">
+            <!-- معلومات الأغنية -->
+            <div class="text-center md:text-right flex-grow">
+                <p class="text-sm text-pink-400">قيد التشغيل:</p>
+                <p id="current-song-title" class="text-lg font-semibold text-white">تحميل...</p>
+            </div>
+            <!-- عناصر التحكم -->
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <button onclick="prevTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
+                    <i data-lucide="skip-back" class="w-6 h-6 text-pink-400"></i>
+                </button>
+                <button id="play-pause-btn" onclick="togglePlayPause()" class="p-4 bg-pink-500 rounded-full hover:bg-pink-600 transition glow-button">
+                    <i id="play-pause-icon" data-lucide="play" class="w-8 h-8 text-white"></i>
+                </button>
+                <button onclick="nextTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
+                    <i data-lucide="skip-forward" class="w-6 h-6 text-pink-400"></i>
+                </button>
+            </div>
+        </div>
+        <audio id="audio-player" onended="nextTrack()"></audio>
+    </div>
+
+    <!-- المودال لإرسال الرسالة (تم تحويله إلى نموذج Formspree) -->
+    <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
+        <form id="message-form" method="POST" action="https://formspree.io/f/mdkppprd" class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
+            <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
+            
+            <!-- هذا الحقل مخفي ويستخدم لعنوان الرد في بريدك الإلكتروني (اختياري) -->
+            <input type="hidden" name="_replyto" value="dromar720074@gmail.com">
+            
+            <textarea name="message" id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..." required minlength="5"
+                      class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
+
+            <div class="flex justify-between items-center">
+                <button type="submit" class="glow-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition">
+                    إرسال الرسالة
+                </button>
+                <button type="button" onclick="closeMessageModal()" class="text-gray-400 hover:text-white transition">
+                    إلغاء
+                </button>
+            </div>
+            <p id="message-status" class="mt-4 text-center text-sm text-green-400 hidden">تم إرسال رسالتك بنجاح!</p>
+        </form>
+    </div>
+
+    <!-- المودال لعرض الصور السينمائي -->
+    <div id="cinematic-modal" class="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4 hidden">
+        <div class="relative w-full h-full flex items-center justify-center">
+            <!-- زر الإغلاق -->
+            <button onclick="closeCinematicModal()" class="absolute top-4 right-4 text-white p-3 rounded-full bg-gray-800 hover:bg-gray-700 z-50">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- حاوية الصورة -->
+            <div class="w-full h-full flex items-center justify-center">
+                <img id="cinematic-image" src="" alt="صورة الإهداء" class="cinematic-image max-w-full max-h-full object-contain rounded-lg shadow-2xl opacity-0 transition-opacity duration-1000">
+            </div>
+
+            <!-- معلومات الصورة -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 p-3 rounded-xl text-white text-center">
+                <p id="cinematic-caption" class="text-lg font-semibold"></p>
+                <p id="cinematic-counter" class="text-sm text-gray-400"></p>
+            </div>
         </div>
     </div>
 
-</div>
 
-<div id="audio-player-controls" class="fixed bottom-0 w-full p-4 rounded-t-2xl shadow-2xl z-20">
-    <div class="flex flex-col md:flex-row items-center justify-center max-w-xl mx-auto space-y-3 md:space-y-0 md:space-x-6 md:space-x-reverse">
-        <div class="text-center md:text-right flex-grow">
-            <p class="text-sm text-pink-400">قيد التشغيل:</p>
-            <p id="current-song-title" class="text-lg font-semibold text-white">تحميل...</p>
-        </div>
-        <div class="flex items-center space-x-4 space-x-reverse">
-            <button onclick="prevTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
-                <i data-lucide="skip-back" class="w-6 h-6 text-pink-400"></i>
-            </button>
-            <button id="play-pause-btn" onclick="togglePlayPause()" class="p-4 bg-pink-500 rounded-full hover:bg-pink-600 transition glow-button">
-                <i id="play-pause-icon" data-lucide="play" class="w-8 h-8 text-white"></i>
-            </button>
-            <button onclick="nextTrack()" class="p-2 rounded-full hover:bg-gray-700 transition">
-                <i data-lucide="skip-forward" class="w-6 h-6 text-pink-400"></i>
-            </button>
-        </div>
-    </div>
-    <audio id="audio-player" onended="nextTrack()"></audio>
-</div>
-
-<div id="message-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
-    <form id="message-form" method="POST" action="https://formspree.io/f/mdkppprd" class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-pink-500 cinematic-modal-content">
-        <h2 class="text-3xl font-bold text-center mb-6 text-pink-400">رسالة ليااا ❤️</h2>
+    <!-- سكربت JavaScript (تم حذف Firebase بالكامل) -->
+    <script type="module">
         
-        <input type="hidden" name="_replyto" value="dromar720074@gmail.com">
-        
-        <textarea name="message" id="message-input" rows="4" placeholder="اكتبي ما يجول في خاطرك..." required minlength="5"
-                    class="w-full p-4 mb-4 bg-gray-800 border border-gray-700 rounded-lg focus:ring-pink-500 focus:border-pink-500 text-white"></textarea>
+        // **********************************************
+        // 1. منطق إرسال الرسائل (Formspree)
+        // **********************************************
 
-        <div class="flex justify-between items-center">
-            <button type="submit" class="glow-button bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full transition">
-                إرسال الرسالة
-            </button>
-            <button type="button" onclick="closeMessageModal()" class="text-gray-400 hover:text-white transition">
-                إلغاء
-            </button>
-        </div>
-        <p id="message-status" class="mt-4 text-center text-sm text-green-400 hidden">تم إرسال رسالتك بنجاح! ستصلك عبر الإيميل.</p>
-    </form>
-</div>
-
-<div id="cinematic-modal" class="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4 hidden">
-    <div class="relative w-full h-full flex items-center justify-center">
-        <button onclick="closeCinematicModal()" class="absolute top-4 right-4 text-white p-3 rounded-full bg-gray-800 hover:bg-gray-700 z-50">
-            <i data-lucide="x" class="w-6 h-6"></i>
-        </button>
-
-        <div class="w-full h-full flex items-center justify-center">
-            <img id="cinematic-image" src="" alt="صورة الإهداء" class="cinematic-image max-w-full max-h-full object-contain rounded-lg shadow-2xl opacity-0 transition-opacity duration-1000">
-        </div>
-
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 p-3 rounded-xl text-white text-center">
-            <p id="cinematic-caption" class="text-lg font-semibold"></p>
-            <p id="cinematic-counter" class="text-sm text-gray-400"></p>
-        </div>
-    </div>
-</div>
-
-<div id="about-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl w-full max-w-md border-2 border-green-500 cinematic-modal-content max-h-full overflow-y-auto">
-        <h2 class="text-3xl font-bold text-center mb-6 text-green-400"> (معلومات عنا) 💖</h2>
-        
-        <p class="text-lg text-gray-300 mb-4">
-            دي تواريخ الحاجات اللي حصلت بينا:
-        </p>
-        
-        <ul class="list-disc list-inside space-y-3 text-gray-200 text-right">
-            <li><strong class="text-pink-400">تاريخ اول رساله بينا:</strong> 10/17/25, 9:45 AM </li>
-            <li><strong class="text-pink-400">تايرخ ميلاد نونتي:</strong> 2009/7/7 </li>
-            <li><strong class="text-pink-400">اكتر حاجه بحبها فيكي:</strong> رقتك وطيبتك وحنيتك</li>
-            <li><strong class="text-pink-400">رسالة مني إليك:</strong> بحبك يا احلا حاجه حصلت لي يا احلا نونه شفتهاا</li>
-            <li><strong class="text-pink-400">اسم روحيي وعمري وقلبي وحياتي كلهاا:</strong> حنين عبدالغفار سيد عبدالغفار احمد </li>
-        </ul>
-        
-        <div class="text-center mt-8">
-            <button type="button" onclick="closeAboutModal()" class="glow-button bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full transition">
-                إغلاق
-            </button>
-        </div>
-    </div>
-</div>
-
-
-<script type="module">
-    
-    // **********************************************
-    // 1. منطق إرسال الرسائل (Formspree)
-    // **********************************************
-
-    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
-    window.openMessageModal = function() {
-        document.getElementById('message-modal').classList.remove('hidden');
-        statusElement.classList.add('hidden'); // إخفاء حالة الرسالة السابقة
-    }
-
-    window.closeMessageModal = function() {
-        document.getElementById('message-modal').classList.add('hidden');
-        document.getElementById('message-input').value = ''; // مسح الإدخال
-    }
-
-    // معالجة إرسال النموذج باستخدام JavaScript لمنع إعادة تحميل الصفحة
-    const form = document.getElementById('message-form');
-    const statusElement = document.getElementById('message-status');
-
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // تحقق بسيط من النص
-        const messageText = document.getElementById('message-input').value.trim();
-        if (messageText.length < 5) {
-            statusElement.textContent = 'الرسالة قصيرة جداً (الحد الأدنى 5 أحرف).';
-            statusElement.classList.remove('hidden', 'text-green-400');
-            statusElement.classList.add('text-red-400');
-            return;
+        window.openMessageModal = function() {
+            document.getElementById('message-modal').classList.remove('hidden');
         }
 
-        // إرسال البيانات
-        const response = await fetch(form.action, {
-            method: form.method,
-            body: new FormData(form),
-            headers: {
-                'Accept': 'application/json'
+        window.closeMessageModal = function() {
+            document.getElementById('message-modal').classList.add('hidden');
+            document.getElementById('message-input').value = ''; // مسح الإدخال
+        }
+
+        // معالجة إرسال النموذج باستخدام JavaScript لمنع إعادة تحميل الصفحة
+        const form = document.getElementById('message-form');
+        const statusElement = document.getElementById('message-status');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // تحقق بسيط من النص
+            const messageText = document.getElementById('message-input').value.trim();
+            if (messageText.length < 5) {
+                statusElement.textContent = 'الرسالة قصيرة جداً (الحد الأدنى 5 أحرف).';
+                statusElement.classList.remove('hidden', 'text-green-400');
+                statusElement.classList.add('text-red-400');
+                return;
+            }
+
+            // إرسال البيانات
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: new FormData(form),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                statusElement.textContent = 'تم إرسال رسالتك بنجاح! ستصلك عبر الإيميل. ❤️';
+                statusElement.classList.remove('hidden', 'text-red-400');
+                statusElement.classList.add('text-green-400');
+                
+                // إغلاق المودال بعد 3 ثوانٍ
+                setTimeout(() => {
+                    closeMessageModal();
+                    statusElement.classList.add('hidden');
+                }, 3000);
+            } else {
+                statusElement.textContent = 'حدث خطأ أثناء الإرسال.';
+                statusElement.classList.remove('hidden', 'text-green-400');
+                statusElement.classList.add('text-red-400');
             }
         });
+        
+        // **********************************************
+        // 2. منطق مشغل الموسيقى
+        // **********************************************
 
-        if (response.ok) {
-            statusElement.textContent = 'تم إرسال رسالتك بنجاح! ستصلك عبر الإيميل. ❤️';
-            statusElement.classList.remove('hidden', 'text-red-400', 'text-red-400');
-            statusElement.classList.add('text-green-400');
-            
-            // إغلاق المودال بعد 3 ثوانٍ
-            setTimeout(() => {
-                window.closeMessageModal();
-                statusElement.classList.add('hidden');
-            }, 3000);
-        } else {
-            statusElement.textContent = 'حدث خطأ أثناء الإرسال.';
-            statusElement.classList.remove('hidden', 'text-green-400');
-            statusElement.classList.add('text-red-400');
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const currentSongTitle = document.getElementById('current-song-title');
+        
+        /*
+        * ---------------------------------------------------
+        * ✅ مكان إضافة الأغاني (تم تصحيح الروابط لصيغة RAW/مباشرة):
+        * ---------------------------------------------------
+        */
+        const playlist = [
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "All of Me - John Legend", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/be794226aad47178af03cc6e629e4fc4a6d41a8a/audio/spotidownloader.com%20-%20All%20of%20Me%20-%20John%20Legend.mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "Love Me Like You Do - Ellie Goulding", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3aae9ab6a5bda9bd780d0d7b5b33ca836d49eaf1/audio/Love%20Me%20Like%20You%20Do%20-%20Ellie%20Goulding.mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "حسيني", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/edbd99caca421fd6462cbd732dfe15fb5309dade/audio/TUL8TE%20-%20Heseeny%20I%20%D8%AA%D9%88%D9%88%D9%84%D9%8A%D8%AA%20-%20%D8%AD%D8%B3%D9%8A%D9%86%D9%8A(MP3_160K).mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "دا لو اتساب", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3327b0ec6c186f84141e3f253772056e112ae1e9/audio/Amr%20Diab%20-%20Da%20Law%20Etsab%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%AF%D9%87%20%D9%84%D9%88%20%D8%A5%D8%AA%D8%B3%D8%A7%D8%A8(MP3_160K).mp3" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                title: "انا وانت", 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/12b1f67965c7d6a51489b667973993c3c4fbbc53/audio/Amr%20Diab%20-%20Ana%20W%20Enta%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%A3%D9%86%D8%A7%20%D9%88%20%D8%A3%D9%86%D8%AA(MP3_160K).mp3" 
+            },
+        ];
+        
+        let currentTrackIndex = 0;
+
+        function loadTrack(index) {
+            currentTrackIndex = index % playlist.length;
+            if (currentTrackIndex < 0) {
+                currentTrackIndex = playlist.length - 1;
+            }
+            const track = playlist[currentTrackIndex];
+            audioPlayer.src = track.url;
+            currentSongTitle.textContent = track.title;
+            audioPlayer.load();
         }
-    });
-    
-    // **********************************************
-    // 2. منطق مشغل الموسيقى
-    // **********************************************
 
-    const audioPlayer = document.getElementById('audio-player');
-    const playPauseIcon = document.getElementById('play-pause-icon');
-    const currentSongTitle = document.getElementById('current-song-title');
-
-    // **********************************************
-    // 0. منطق شاشة القفل (Keypad Logic) - تم التصحيح هنا
-    // **********************************************
-
-    const CORRECT_PIN = '772009';
-    let currentPin = '';
-    const pinDisplayChildren = document.getElementById('pin-display').children;
-    const loginScreen = document.getElementById('login-screen');
-    const loginStatus = document.getElementById('login-status');
-
-    // 1. الدالة المسؤولة عن تحديث النقاط (يجب أن تكون عامة)
-    window.updatePinDisplay = function() {
-        for (let i = 0; i < 6; i++) {
-            if (i < currentPin.length) {
-                pinDisplayChildren[i].classList.add('pin-filled'); // لإظهار التوهج (تم الإدخال)
+        window.togglePlayPause = function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                lucide.createIcons(); // لتحديث الأيقونة
+                playPauseIcon.setAttribute('data-lucide', 'pause');
             } else {
-                pinDisplayChildren[i].classList.remove('pin-filled'); // لإخفاء التوهج (لم يتم الإدخال)
+                audioPlayer.pause();
+                lucide.createIcons();
+                playPauseIcon.setAttribute('data-lucide', 'play');
+            }
+            // إعادة رسم الأيقونات لضمان التحديث
+            setTimeout(() => { lucide.createIcons(); }, 10);
+        }
+
+        window.nextTrack = function() {
+            const wasPlaying = !audioPlayer.paused;
+            loadTrack(currentTrackIndex + 1);
+            if (wasPlaying) {
+                audioPlayer.play();
             }
         }
-    }
 
-    // 2. الدالة المسؤولة عن إضافة رقم (يجب أن تكون عامة)
-    window.appendPin = function(digit) {
-        if (currentPin.length < 6) {
-            currentPin += digit;
-            window.updatePinDisplay(); // استدعاء الدالة العامة المصححة
+        window.prevTrack = function() {
+            const wasPlaying = !audioPlayer.paused;
+            loadTrack(currentTrackIndex - 1);
+            if (wasPlaying) {
+                audioPlayer.play();
+            }
         }
-    };
+        
+        // تحميل الأغنية الثانية (الفهرس 1) عند بدء التشغيل
+        loadTrack(1);
 
-    // 3. الدالة المسؤولة عن المسح (يجب أن تكون عامة)
-    window.clearPin = function() {
-        currentPin = '';
-        window.updatePinDisplay(); // استدعاء الدالة العامة المصححة
-        loginStatus.classList.add('hidden');
-    };
+        // ** محاولة التشغيل التلقائي (قد يفشل بسبب قيود المتصفح) **
+        audioPlayer.play().catch(error => {
+            // إذا فشل التشغيل التلقائي (وهذا متوقع)، لا تفعل شيئًا.
+            // المستخدم سيحتاج للضغط على زر التشغيل يدوياً
+            console.log("Autoplay blocked, user must press play.");
+        });
 
-    // 4. الدالة المسؤولة عن التحقق (يجب أن تكون عامة)
-    window.checkPin = function() {
-        if (currentPin === CORRECT_PIN) {
-            // النجاح
-            loginScreen.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-            document.body.style.overflowY = 'auto';
-        } else {
-            // الفشل
-            loginStatus.textContent = 'كلمة المرور غير صحيحة.';
-            loginStatus.classList.remove('hidden');
-            // مسح الكود بعد فترة وجيزة
+        // **********************************************
+        // 3. منطق عرض الصور السينمائي
+        // **********************************************
+
+        /*
+        * ---------------------------------------------------
+        * ✅ مكان إضافة الصور (تم تصحيح الروابط لصيغة RAW/مباشرة):
+        * ---------------------------------------------------
+        */
+        const cinematicImages = [
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/12b1f67965c7d6a51489b667973993c3c4fbbc53/images/nontymain.png", 
+                caption: "بحبهااا" 
+            },
+            // تم تحويل رابط GitHub 'blob' إلى 'raw'
+            { 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/320b9c789c93e40c0ce55499c0316fbd660dcab2/images/First%20Say.png", 
+                caption: "اول مره تقولهااا" 
+            },
+            // الصورة الجديدة (تمت إضافتها وتصحيح الرابط)
+            { 
+                url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/7f5bb64938d77a017ac934f5d9f38987c5e4a374/images/Screenshot_20251101_143401.jpg", 
+                caption: "دي بتاعتي انا وبسس 💗" 
+            },
+            // يمكنك إضافة المزيد هنا: { url: "رابط الصورة العامة", caption: "وصف للصورة" },
+        ];
+
+        let cinematicTimer;
+        let currentImageIndex = 0;
+        const cinematicImageElement = document.getElementById('cinematic-image');
+        const cinematicCaptionElement = document.getElementById('cinematic-caption');
+        const cinematicCounterElement = document.getElementById('cinematic-counter');
+        const SLIDESHOW_DURATION = 4000; // 4 ثواني لكل صورة
+
+        function showImage(index) {
+            if (cinematicImages.length === 0) return;
+
+            currentImageIndex = index % cinematicImages.length;
+            if (currentImageIndex < 0) {
+                currentImageIndex = cinematicImages.length - 1;
+            }
+
+            const image = cinematicImages[currentImageIndex];
+
+            // إخفاء الصورة قبل تغيير المصدر
+            cinematicImageElement.classList.remove('opacity-100');
+            cinematicImageElement.classList.add('opacity-0');
+
             setTimeout(() => {
-                window.clearPin();
-            }, 500);
-        }
-    };
-    
-    // إخفاء التمرير عند التحميل
-    document.body.style.overflowY = 'hidden';
-    
-    
-    /*
-    * ---------------------------------------------------
-    * ✅ مكان إضافة الأغاني (تم تصحيح الروابط لصيغة RAW/مباشرة):
-    * ---------------------------------------------------
-    */
+                // تغيير المصدر والتسمية
+                cinematicImageElement.src = image.url;
+                cinematicCaptionElement.textContent = image.caption;
+                cinematicCounterElement.textContent = `صورة ${currentImageIndex + 1} من ${cinematicImages.length}`;
 
-    const playlist = [
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            title: "All of Me - John Legend",  
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/be794226aad47178af03cc6e629e4fc4a6d41a8a/audio/spotidownloader.com%20-%20All%20of%20Me%20-%20John%20Legend.mp3"  
-        },
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            title: "Love Me Like You Do - Ellie Goulding",  
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3aae9ab6a5bda9bd780d0d7b5b33ca836d49eaf1/audio/Love%20Me%20Like%20You%20Do%20-%20Ellie%20Goulding.mp3"  
-        },
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            title: "حسيني",  
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/edbd99caca421fd6462cbd732dfe15fb5309dade/audio/TUL8TE%20-%20Heseeny%20I%20%D8%AA%D9%88%D9%88%D9%84%D9%8A%D8%AA%20-%20%D8%AD%D8%B3%D9%8A%D9%86%D9%8A(MP3_160K).mp3"  
-        },
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            title: "دا لو اتساب",  
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/3327b0ec6c186f84141e3f253772056e112ae1e9/audio/Amr%20Diab%20-%20Da%20Law%20Etsab%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%AF%D9%87%20%D9%84%D9%88%20%DD8%A5%D8%AA%D8%B3%D8%A7%D8%A8(MP3_160K).mp3"  
-        },
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            title: "انا وانت",  
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/12b1f67965c7d6a51489b667973993c3c4fbbc53/audio/Amr%20Diab%20-%20Ana%20W%20Enta%20(Official%20Lyric%20Video)%20_%20(%D9%83%D9%84%D9%85%D8%A7%D8%AA)%20%D8%B9%D9%85%D8%B1%D9%88%20%D8%AF%D9%8A%D8%A7%D8%A8%20-%20%D8%A3%D9%86%D8%A7%20%D9%88%20%D8%A3%D9%86%D8%AA(MP3_160K).mp3"  
-        },
-    ];
-    
-    let currentTrackIndex = 0;
-
-    function loadTrack(index) {
-        currentTrackIndex = index % playlist.length;
-        if (currentTrackIndex < 0) {
-            currentTrackIndex = playlist.length - 1;
-        }
-        const track = playlist[currentTrackIndex];
-        audioPlayer.src = track.url;
-        currentSongTitle.textContent = track.title;
-        audioPlayer.load();
-    }
-
-    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
-    window.togglePlayPause = function() {
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-            lucide.createIcons(); // لتحديث الأيقونة
-            playPauseIcon.setAttribute('data-lucide', 'pause');
-        } else {
-            audioPlayer.pause();
-            lucide.createIcons();
-            playPauseIcon.setAttribute('data-lucide', 'play');
-        }
-        // إعادة رسم الأيقونات لضمان التحديث
-        setTimeout(() => { lucide.createIcons(); }, 10);
-    }
-
-    window.nextTrack = function() {
-        const wasPlaying = !audioPlayer.paused;
-        loadTrack(currentTrackIndex + 1);
-        if (wasPlaying) {
-            audioPlayer.play();
-        }
-    }
-
-    window.prevTrack = function() {
-        const wasPlaying = !audioPlayer.paused;
-        loadTrack(currentTrackIndex - 1);
-        if (wasPlaying) {
-            audioPlayer.play();
-        }
-    }
-    
-    // تحميل الأغنية الثانية (الفهرس 1) عند بدء التشغيل
-    loadTrack(1);
-
-    // ** محاولة التشغيل التلقائي (قد يفشل بسبب قيود المتصفح) **
-    audioPlayer.play().catch(error => {
-        // إذا فشل التشغيل التلقائي (وهذا متوقع)، لا تفعل شيئًا.
-        // المستخدم سيحتاج للضغط على زر التشغيل يدوياً
-        console.log("Autoplay blocked, user must press play.");
-    });
-
-    // **********************************************
-    // 3. منطق عرض الصور السينمائي
-    // **********************************************
-
-    /*
-    * ---------------------------------------------------
-    * ✅ مكان إضافة الصور (تم تصحيح الروابط لصيغة RAW/مباشرة):
-    * ---------------------------------------------------
-    */
-    const cinematicImages = [
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/12b1f67965c7d6a51489b667973993c3c4fbbc53/images/nontymain.png",  
-            caption: "بحبهااا"  
-        },
-        // تم تحويل رابط GitHub 'blob' إلى 'raw'
-        {   
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/320b9c789c93e40c0ce55499c0316fbd660dcab2/images/First%20Say.png",  
-            caption: "اول مره تقولهااا"  
-        },
-        // الصورة الجديدة (تمت إضافتها وتصحيح الرابط)
-        {   
-            url: "https://raw.githubusercontent.com/Omar56154/Nonty-Gift/7f5bb64938d77a017ac934f5d9f38987c5e4a374/images/Screenshot_20251101_143401.jpg",  
-            caption: "دي بتاعتي انا وبسس 💗"  
-        },
-        // يمكنك إضافة المزيد هنا: { url: "رابط الصورة العامة", caption: "وصف للصورة" },
-    ];
-
-    let cinematicTimer;
-    let currentImageIndex = 0;
-    const cinematicImageElement = document.getElementById('cinematic-image');
-    const cinematicCaptionElement = document.getElementById('cinematic-caption');
-    const cinematicCounterElement = document.getElementById('cinematic-counter');
-    const SLIDESHOW_DURATION = 4000; // 4 ثواني لكل صورة
-
-    function showImage(index) {
-        if (cinematicImages.length === 0) return;
-
-        currentImageIndex = index % cinematicImages.length;
-        if (currentImageIndex < 0) {
-            currentImageIndex = cinematicImages.length - 1;
+                // إظهار الصورة تدريجياً
+                cinematicImageElement.classList.remove('opacity-0');
+                cinematicImageElement.classList.add('opacity-100');
+            }, 500); // نصف ثانية للانتقال (fade out)
         }
 
-        const image = cinematicImages[currentImageIndex];
-
-        // إخفاء الصورة قبل تغيير المصدر
-        cinematicImageElement.classList.remove('opacity-100');
-        cinematicImageElement.classList.add('opacity-0');
-
-        setTimeout(() => {
-            // تغيير المصدر والتسمية
-            cinematicImageElement.src = image.url;
-            cinematicCaptionElement.textContent = image.caption;
-            cinematicCounterElement.textContent = `صورة ${currentImageIndex + 1} من ${cinematicImages.length}`;
-
-            // إظهار الصورة تدريجياً
-            cinematicImageElement.classList.remove('opacity-0');
-            cinematicImageElement.classList.add('opacity-100');
-        }, 500); // نصف ثانية للانتقال (fade out)
-    }
-
-    function startSlideshow() {
-        if (cinematicImages.length === 0) return;
-        showImage(currentImageIndex);
-        
-        cinematicTimer = setInterval(() => {
-            showImage(currentImageIndex + 1);
-        }, SLIDESHOW_DURATION);
-    }
-
-    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
-    window.openCinematicModal = function() {
-        document.getElementById('cinematic-modal').classList.remove('hidden');
-        startSlideshow();
-    }
-
-    window.closeCinematicModal = function() {
-        document.getElementById('cinematic-modal').classList.add('hidden');
-        clearInterval(cinematicTimer);
-        cinematicImageElement.classList.remove('opacity-100');
-        cinematicImageElement.classList.add('opacity-0');
-        currentImageIndex = 0; // إعادة التعيين للبداية في المرة القادمة
-    }
-    
-    // **********************************************
-    // 4. منطق "معلومات عنا"
-    // **********************************************
-
-    // تم تعريف الدوال كـ window.functionName لتحل مشكلة الـ 'module'
-    window.openAboutModal = function() {
-        document.getElementById('about-modal').classList.remove('hidden');
-    }
-    
-    window.closeAboutModal = function() {
-        document.getElementById('about-modal').classList.add('hidden');
-    }
-
-
-    // **********************************************
-    // 5. تأثير القلوب العائمة (الجسيمات)
-    // **********************************************
-
-    const heartContainer = document.getElementById('heart-container');
-
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        
-        // تحديد موقع عشوائي في الجزء السفلي من الشاشة
-        const size = Math.random() * 20 + 10; // حجم بين 10px و 30px
-        const duration = Math.random() * 5 + 7; // مدة الحركة بين 7s و 12s
-        const delay = Math.random() * 2; // تأخير عشوائي
-
-        heart.style.width = `${size}px`;
-        heart.style.height = `${size}px`;
-        heart.style.left = `${Math.random() * 100}vw`; // موقع أفقي عشوائي
-        heart.style.bottom = `-${size}px`; // يبدأ من أسفل الشاشة
-        heart.style.animationDuration = `${duration}s`;
-        heart.style.animationDelay = `${delay}s`;
-
-        // لجعل القلوب تتحرك باتجاه مختلف قليلاً
-        const moveX = (Math.random() - 0.5) * 50; // حركة أفقية عشوائية
-        heart.style.setProperty('--move-x', `${moveX}px`);
-
-        heartContainer.appendChild(heart);
-
-        // إزالة القلب بعد انتهاء حركته لتوفير الذاكرة
-        setTimeout(() => {
-            heart.remove();
-        }, (duration + delay) * 1000);
-    }
-
-    function startHeartEffect() {
-        // إنشاء قلب جديد كل 300 مللي ثانية
-        setInterval(createHeart, 300);
-        // إنشاء قلوب أولية لملء الشاشة بسرعة
-        for (let i = 0; i < 20; i++) {
-            createHeart();
+        function startSlideshow() {
+            if (cinematicImages.length === 0) return;
+            showImage(currentImageIndex);
+            
+            cinematicTimer = setInterval(() => {
+                showImage(currentImageIndex + 1);
+            }, SLIDESHOW_DURATION);
         }
-    }
 
-    // تشغيل تأثير القلوب عند تحميل الصفحة
-    window.onload = function() {
-        startHeartEffect();
-        lucide.createIcons(); // لتفعيل أيقونات Lucide
-    };
+        window.openCinematicModal = function() {
+            document.getElementById('cinematic-modal').classList.remove('hidden');
+            startSlideshow();
+        }
 
-</script>
+        window.closeCinematicModal = function() {
+            document.getElementById('cinematic-modal').classList.add('hidden');
+            clearInterval(cinematicTimer);
+            cinematicImageElement.classList.remove('opacity-100');
+            cinematicImageElement.classList.add('opacity-0');
+            currentImageIndex = 0; // إعادة التعيين للبداية في المرة القادمة
+        }
+
+
+        // **********************************************
+        // 4. تأثير القلوب العائمة (الجسيمات)
+        // **********************************************
+
+        const heartContainer = document.getElementById('heart-container');
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            
+            // تحديد موقع عشوائي في الجزء السفلي من الشاشة
+            const size = Math.random() * 20 + 10; // حجم بين 10px و 30px
+            const duration = Math.random() * 5 + 7; // مدة الحركة بين 7s و 12s
+            const delay = Math.random() * 2; // تأخير عشوائي
+
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.left = `${Math.random() * 100}vw`; // موقع أفقي عشوائي
+            heart.style.bottom = `-${size}px`; // يبدأ من أسفل الشاشة
+            heart.style.animationDuration = `${duration}s`;
+            heart.style.animationDelay = `${delay}s`;
+
+            // لجعل القلوب تتحرك باتجاه مختلف قليلاً
+            const moveX = (Math.random() - 0.5) * 50; // حركة أفقية عشوائية
+            heart.style.setProperty('--move-x', `${moveX}px`);
+
+            heartContainer.appendChild(heart);
+
+            // إزالة القلب بعد انتهاء حركته لتوفير الذاكرة
+            setTimeout(() => {
+                heart.remove();
+            }, (duration + delay) * 1000);
+        }
+
+        function startHeartEffect() {
+            // إنشاء قلب جديد كل 300 مللي ثانية
+            setInterval(createHeart, 300);
+            // إنشاء قلوب أولية لملء الشاشة بسرعة
+            for (let i = 0; i < 20; i++) {
+                createHeart();
+            }
+        }
+
+        // تشغيل تأثير القلوب عند تحميل الصفحة
+        window.onload = function() {
+            startHeartEffect();
+            lucide.createIcons(); // لتفعيل أيقونات Lucide
+        };
+
+    </script>
 </body>
 </html>
